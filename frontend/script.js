@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const backendURL = "https://jewellery-website-5xi0.onrender.com"; // <-- your Render backend URL
+
   // ===== REGISTER FORM =====
   const registerForm = document.getElementById("registerForm");
-  registerForm.addEventListener("submit", (e) => {
+  registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const name = document.getElementById("regName").value.trim();
     const address = document.getElementById("regAddress").value.trim();
@@ -12,27 +14,24 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Send data to backend via GET request
-    fetch(
-      `http://localhost:5000/api/register?name=${encodeURIComponent(
-        name
-      )}&phone=${encodeURIComponent(phone)}&address=${encodeURIComponent(
-        address
-      )}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message) {
-          alert(data.message);
-          registerForm.reset();
-        } else {
-          alert("Something went wrong!");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Server error. Try again later.");
+    try {
+      const res = await fetch(`${backendURL}/api/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, address })
       });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message || "Registered successfully!");
+        registerForm.reset();
+      } else {
+        alert(data.message || "Something went wrong!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error. Try again later.");
+    }
   });
 
   // ===== LOGIN FORM WITH OTP =====
@@ -41,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const otpGroup = document.querySelector(".otp-group");
   let generatedOtp = "";
 
-  sendOtpBtn.addEventListener("click", () => {
+  sendOtpBtn.addEventListener("click", async () => {
     const phone = document.getElementById("loginPhone").value.trim();
 
     if (!/^\d{10}$/.test(phone)) {
@@ -49,31 +48,29 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Check backend for registered user
-    fetch(`http://localhost:5000/api/login?phone=${encodeURIComponent(phone)}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message) {
-          alert(data.message); // User not found or error
-        } else {
-          // Generate OTP (demo only)
-          generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-          console.log("OTP for demo:", generatedOtp);
-          alert("OTP sent! Check console for demo.");
+    try {
+      const res = await fetch(`${backendURL}/api/login?phone=${encodeURIComponent(phone)}`);
+      const data = await res.json();
 
-          otpGroup.style.display = "block";
-          sendOtpBtn.style.display = "none";
-          loginBtn.style.display = "block";
+      if (data.message) {
+        alert(data.message); // user not found
+      } else {
+        // Generate OTP (demo only)
+        generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log("OTP for demo:", generatedOtp);
+        alert("OTP sent! Check console for demo.");
 
-          // Save user info temporarily for welcome message
-          localStorage.setItem("userName", data.name);
-          localStorage.setItem("userPhone", data.phone);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Server error. Try again later.");
-      });
+        otpGroup.style.display = "block";
+        sendOtpBtn.style.display = "none";
+        loginBtn.style.display = "block";
+
+        localStorage.setItem("userName", data.name);
+        localStorage.setItem("userPhone", data.phone);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error. Try again later.");
+    }
   });
 
   document.getElementById("loginForm").addEventListener("submit", (e) => {
@@ -81,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const enteredOtp = document.getElementById("otp").value.trim();
     if (enteredOtp === generatedOtp) {
       alert("Login successful!");
-      localStorage.setItem("isLoggedIn", "true"); // mark login
+      localStorage.setItem("isLoggedIn", "true");
       window.location.reload();
     } else {
       alert("Invalid OTP. Try again.");
