@@ -1,3 +1,4 @@
+import os
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -9,7 +10,7 @@ app.use(cors({ origin: "*" })); // allow all origins (you can restrict to your d
 app.use(express.json()); // parse JSON body
 
 // ===== MONGODB CONNECTION =====
-const mongoURI = MONGODB_URI;
+const mongoURI = os.getenv(MONGODB_URI);
 
 mongoose
   .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
