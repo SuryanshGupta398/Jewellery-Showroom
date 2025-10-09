@@ -6,7 +6,15 @@ const cors = require("cors");
 const app = express();
 
 // ===== MIDDLEWARE =====
-app.use(cors({ origin: "*" })); // allow all origins (you can restrict to your domain later)
+app.use(cors({
+  origin: [
+    "http://localhost:5500",       // for Live Server
+    "http://127.0.0.1:5500",       // fallback
+  ],
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"]
+}));
+ // allow all origins (you can restrict to your domain later)
 app.use(express.json()); // parse JSON body
 
 // ===== MONGODB CONNECTION =====
