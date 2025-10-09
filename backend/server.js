@@ -68,6 +68,15 @@ app.get("/api/login", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
 // 🔧 Test route
 app.get("/", (req, res) => {
