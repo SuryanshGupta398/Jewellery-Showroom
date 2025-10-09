@@ -3,27 +3,31 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
-app.use(cors());
-app.use(express.json()); // parses JSON POST body
 
-// MongoDB connection
-mongoose.connect(
-  "mongodb+srv://user_01:bala@cluster0.qgcatm6.mongodb.net/fake_new_app?retryWrites=true&w=majority",
-  { useNewUrlParser: true, useUnifiedTopology: true }
-)
+// ===== MIDDLEWARE =====
+app.use(cors({ origin: "*" })); // allow all origins (you can restrict to your domain later)
+app.use(express.json()); // parse JSON body
+
+// ===== MONGODB CONNECTION =====
+const mongoURI = "mongodb+srv://user_01:bala@cluster0.qgcatm6.mongodb.net/fake_new_app?retryWrites=true&w=majority";
+
+mongoose
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error(err));
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// User model
+// ===== USER MODEL =====
 const userSchema = new mongoose.Schema({
-  name: String,
-  phone: String,
-  address: String,
+  name: { type: String, required: true },
+  phone: { type: String, required: true, unique: true },
+  address: { type: String, required: true },
 });
 
 const User = mongoose.model("User", userSchema);
 
-// Registration route (POST)
+// ===== ROUTES =====
+
+// 🧩 Register new user
 app.post("/api/register", async (req, res) => {
   try {
     const { name, phone, address } = req.body;
@@ -32,9 +36,11 @@ app.post("/api/register", async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Check if phone already exists
+    // Check if user exists
     const existingUser = await User.findOne({ phone });
-    if (existingUser) return res.status(400).json({ message: "Phone already registered" });
+    if (existingUser) {
+      return res.status(400).json({ message: "Phone already registered" });
+    }
 
     const newUser = new User({ name, phone, address });
     await newUser.save();
@@ -46,9 +52,28 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// Test route
-app.get("/", (req, res) => {
-  res.send("Backend running ✅");
+// 🔍 Login route (check if phone exists)
+app.get("/api/login", async (req, res) => {
+  try {
+    const { phone } = req.query;
+    if (!phone) return res.status(400).json({ error: "Phone is required" });
+
+    const user = await User.findOne({ phone });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    // Send user data (no sensitive info)
+    res.json({ name: user.name, phone: user.phone });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
-app.listen(5000, () => console.log("Server started at http://localhost:5000"));
+// 🔧 Test route
+app.get("/", (req, res) => {
+  res.send("✅ Backend running successfully");
+});
+
+// ===== SERVER LISTEN =====
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
