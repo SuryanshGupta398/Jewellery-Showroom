@@ -9,7 +9,7 @@ app.use(cors({ origin: "*" })); // allow all origins (you can restrict to your d
 app.use(express.json()); // parse JSON body
 
 // ===== MONGODB CONNECTION =====
-const mongoURI = "mongodb+srv://user_01:bala@cluster0.qgcatm6.mongodb.net/fake_new_app?retryWrites=true&w=majority";
+const mongoURI = MONGODB_URI;
 
 mongoose
   .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
