@@ -1,4 +1,4 @@
-import os;
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -10,7 +10,12 @@ app.use(cors({ origin: "*" })); // allow all origins (you can restrict to your d
 app.use(express.json()); // parse JSON body
 
 // ===== MONGODB CONNECTION =====
-const mongoURI = os.getenv(MONGODB_URI);
+const mongoURI = process.env.MONGODB_URI;
+
+if (!mongoURI) {
+  console.error("❌ MONGODB_URI not set in environment variables");
+  process.exit(1);
+}
 
 mongoose
   .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
