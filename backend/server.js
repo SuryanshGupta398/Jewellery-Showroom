@@ -38,23 +38,25 @@ app.post("/api/register", async (req, res) => {
   try {
     const { name, phone, address } = req.body;
 
+    console.log("Register request body:", req.body);
+
     if (!name || !phone || !address) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Check if user exists
     const existingUser = await User.findOne({ phone });
     if (existingUser) {
       return res.status(400).json({ message: "Phone already registered" });
     }
 
     const newUser = new User({ name, phone, address });
-    await newUser.save();
+    const savedUser = await newUser.save();
 
+    console.log("Saved user:", savedUser);
     res.status(201).json({ message: "User registered successfully!" });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ Registration error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
