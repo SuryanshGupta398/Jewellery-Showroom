@@ -8,7 +8,7 @@ const app = express();
 // ===== MIDDLEWARE =====
 app.use(cors({
   origin: [
-    "http://localhost:5500",       // for Live Server
+    "http://localhost:3000",       // for Live Server
     "http://127.0.0.1:5500",       // fallback
   ],
   methods: ["GET", "POST"],
