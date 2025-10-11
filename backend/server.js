@@ -103,6 +103,7 @@ app.get("/api/users", async (req, res) => {
 });
 
 // 🛍️ Add item to user's cart
+// 🛍️ Add item to user's cart (or increase quantity)
 app.post("/api/cart/add", async (req, res) => {
   try {
     const { phone, product } = req.body;
@@ -114,13 +115,13 @@ app.post("/api/cart/add", async (req, res) => {
     const user = await User.findOne({ phone });
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Check if item already exists
+    // Check if product already exists
     const existingItem = user.cart.find(item => item.productId === product.productId);
 
     if (existingItem) {
-      existingItem.quantity += 1;
+      existingItem.quantity += product.quantity || 1; // increment quantity
     } else {
-      user.cart.push(product);
+      user.cart.push({ ...product, quantity: product.quantity || 1 });
     }
 
     await user.save();
@@ -169,6 +170,34 @@ app.post("/api/cart/remove", async (req, res) => {
   }
 });
 
+// 🔢 Update quantity
+app.post("/api/cart/update", async (req, res) => {
+  try {
+    const { phone, productId, quantity } = req.body;
+
+    if (!phone || !productId || quantity == null) {
+      return res.status(400).json({ message: "Phone, productId and quantity are required" });
+    }
+
+    const user = await User.findOne({ phone });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const item = user.cart.find(i => i.productId === productId);
+    if (!item) return res.status(404).json({ message: "Item not found" });
+
+    if (quantity <= 0) {
+      user.cart = user.cart.filter(i => i.productId !== productId);
+    } else {
+      item.quantity = quantity;
+    }
+
+    await user.save();
+    res.json({ message: "Quantity updated", cart: user.cart });
+  } catch (err) {
+    console.error("❌ Update cart error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
 
 // 🔧 Test route
 app.get("/", (req, res) => {
