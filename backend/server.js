@@ -1,4 +1,3 @@
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -35,6 +34,15 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   phone: { type: String, required: true, unique: true },
   address: { type: String, required: true },
+  cart: [
+    {
+      productId: String,
+      name: String,
+      price: Number,
+      quantity: { type: Number, default: 1 },
+      image: String
+    }
+  ]
 });
 
 const User = mongoose.model("grahak", userSchema);
@@ -93,6 +101,74 @@ app.get("/api/users", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+// 🛍️ Add item to user's cart
+app.post("/api/cart/add", async (req, res) => {
+  try {
+    const { phone, product } = req.body;
+
+    if (!phone || !product) {
+      return res.status(400).json({ message: "Phone and product are required" });
+    }
+
+    const user = await User.findOne({ phone });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Check if item already exists
+    const existingItem = user.cart.find(item => item.productId === product.productId);
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      user.cart.push(product);
+    }
+
+    await user.save();
+    res.status(200).json({ message: "Item added to cart", cart: user.cart });
+  } catch (err) {
+    console.error("❌ Add to cart error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+// 🧾 Get user's cart
+app.get("/api/cart", async (req, res) => {
+  try {
+    const { phone } = req.query;
+    if (!phone) return res.status(400).json({ message: "Phone is required" });
+
+    const user = await User.findOne({ phone });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({ cart: user.cart });
+  } catch (err) {
+    console.error("❌ Get cart error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+// 🗑️ Remove item from cart
+app.post("/api/cart/remove", async (req, res) => {
+  try {
+    const { phone, productId } = req.body;
+
+    if (!phone || !productId) {
+      return res.status(400).json({ message: "Phone and productId are required" });
+    }
+
+    const user = await User.findOne({ phone });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.cart = user.cart.filter(item => item.productId !== productId);
+    await user.save();
+
+    res.json({ message: "Item removed", cart: user.cart });
+  } catch (err) {
+    console.error("❌ Remove from cart error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
 
 // 🔧 Test route
 app.get("/", (req, res) => {
