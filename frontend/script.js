@@ -1,153 +1,208 @@
-// ===== PREMIUM ANIMATION - RUNS IMMEDIATELY =====
-(function checkAndShowAnimation() {
-  // Check if we're on homepage and animation hasn't been shown
-  const isHomePage = window.location.pathname.endsWith('index.html') || 
-                    window.location.pathname.endsWith('/') || 
-                    (document.querySelector('.hero') !== null && 
-                     !window.location.pathname.includes('login.html') &&
-                     !window.location.pathname.includes('register.html'));
-  
-  console.log('Animation check:', {
-    isHomePage,
-    pathname: window.location.pathname,
-    hasHero: document.querySelector('.hero') !== null,
-    animationShown: sessionStorage.getItem('animationShown')
-  });
-  
-  if (isHomePage && !sessionStorage.getItem('animationShown')) {
-    console.log('Showing animation');
-    initializePremiumAnimation();
-  } else {
-    console.log('Skipping animation');
-    // Show content immediately
-    document.body.classList.add('loaded');
-    document.body.style.overflow = 'auto';
-    initializeFloatingElements();
-  }
-})();
-
-// ===== OPTIMIZED PREMIUM ANIMATION =====
-function initializePremiumAnimation() {
-  console.log('Initializing premium animation...');
-  
-  // Hide main content initially
-  document.body.style.overflow = 'hidden';
-  
-  // Create welcome overlay
-  const welcomeOverlay = document.createElement('div');
-  welcomeOverlay.className = 'welcome-overlay';
-  welcomeOverlay.id = 'welcomeOverlay';
-  
-  welcomeOverlay.innerHTML = `
-    <div class="welcome-container">
-      <div class="welcome-card">
-        <div class="welcome-logo">✨ Shimmer & Shine</div>
-        <div class="welcome-tagline">Timeless Elegance</div>
-        
-        <div class="simple-diamond">
-          <div class="diamond-shape"></div>
-        </div>
-        
-        <div class="welcome-message">
-          Step into a world where every piece tells a story of craftsmanship, 
-          luxury, and timeless beauty. Discover jewellery that celebrates 
-          your most precious moments.
-        </div>
-        
-        <button class="enter-btn" id="enterBtn">
-          <i class="fas fa-gem btn-icon"></i>
-          Enter Boutique
-        </button>
-        
-        <div class="skip-text">Automatically entering in <span id="countdown">5</span>s</div>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(welcomeOverlay);
-  
-  // Handle enter button click
-  const enterBtn = document.getElementById('enterBtn');
-  enterBtn.addEventListener('click', function() {
-    console.log('Enter button clicked');
-    enterBoutique();
-  });
-
-  // Auto-enter countdown (increased to 5 seconds)
-  let countdown = 15;
-  const countdownEl = document.getElementById('countdown');
-  const countdownInterval = setInterval(() => {
-    countdown--;
-    if (countdownEl) countdownEl.textContent = countdown;
-    
-    if (countdown <= 0) {
-      clearInterval(countdownInterval);
-      if (document.getElementById('welcomeOverlay')) {
-        enterBoutique();
-      }
+// ===== ROYAL PREMIUM ANIMATION - MOBILE OPTIMIZED =====
+class RoyalAnimation {
+    constructor() {
+        this.animationShown = sessionStorage.getItem('royalAnimationShown');
+        this.isMobile = this.checkMobile();
+        this.init();
     }
-  }, 1000);
-}
 
-function enterBoutique() {
-  console.log('Entering boutique...');
-  
-  // Mark animation as shown for this session
-  sessionStorage.setItem('animationShown', 'true');
-  
-  const welcomeOverlay = document.getElementById('welcomeOverlay');
-  if (welcomeOverlay) {
-    // Add exiting animation
-    welcomeOverlay.classList.add('exiting');
-    
-    setTimeout(() => {
-      // Remove overlay
-      welcomeOverlay.remove();
-      
-      // Show main content
-      document.body.classList.add('loaded');
-      document.body.style.overflow = 'auto';
-      
-      // Initialize floating elements after animation
-      initializeFloatingElements();
-      
-      console.log('Animation completed, main content shown');
-    }, 800);
-  } else {
-    // Fallback if overlay doesn't exist
-    document.body.classList.add('loaded');
-    document.body.style.overflow = 'auto';
-    initializeFloatingElements();
-  }
-}
+    checkMobile() {
+        return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
 
-// ===== DYNAMIC FLOATING ELEMENTS =====
-function initializeFloatingElements() {
-  const heroSection = document.querySelector('.hero');
-  if (!heroSection) return;
-  
-  const floatingContainer = document.createElement('div');
-  floatingContainer.className = 'floating-elements';
-  floatingContainer.id = 'floatingElements';
-  
-  const jewels = ['💎', '✨', '🔶', '💍', '🌟', '💫', '⭐', '🔸', '💠'];
-  
-  // Create floating elements
-  jewels.forEach((jewel, index) => {
-    const element = document.createElement('div');
-    element.className = 'floating-element';
-    element.textContent = jewel;
-    element.style.left = `${(index + 1) * 10}%`;
-    element.style.animationDelay = `${index * 0.5}s`;
-    element.style.fontSize = `${1 + Math.random() * 1}rem`;
-    floatingContainer.appendChild(element);
-  });
-  
-  heroSection.appendChild(floatingContainer);
-  
-  console.log('Floating elements initialized');
-}
+    init() {
+        const isHomePage = this.isHomePage();
+        
+        if (isHomePage && !this.animationShown) {
+            this.showRoyalAnimation();
+        } else {
+            this.skipAnimation();
+        }
+    }
 
+    isHomePage() {
+        return window.location.pathname.endsWith('index.html') || 
+               window.location.pathname.endsWith('/') || 
+               (document.querySelector('.hero') !== null && 
+                !window.location.pathname.includes('login.html') &&
+                !window.location.pathname.includes('register.html'));
+    }
+
+    showRoyalAnimation() {
+        console.log('🦄 Showing royal premium animation');
+        
+        // Hide main content
+        document.body.style.overflow = 'hidden';
+
+        // Create royal overlay
+        const overlay = this.createRoyalOverlay();
+        document.body.appendChild(overlay);
+
+        // Initialize particles (limited for mobile)
+        this.createRoyalParticles();
+
+        // Start countdown
+        this.startRoyalCountdown();
+    }
+
+    createRoyalOverlay() {
+        const overlay = document.createElement('div');
+        overlay.className = 'royal-welcome-overlay';
+        overlay.id = 'royalWelcomeOverlay';
+
+        overlay.innerHTML = `
+            <div class="royal-pattern"></div>
+            <div class="royal-particles" id="royalParticles"></div>
+            
+            <div class="royal-welcome-container">
+                <div class="royal-welcome-card">
+                    <div class="royal-crown">👑</div>
+                    <div class="royal-logo">Shimmer & Shine</div>
+                    <div class="royal-tagline">Royal Jewellery Boutique</div>
+                    
+                    <div class="royal-diamond-showcase">
+                        <div class="royal-diamond"></div>
+                    </div>
+                    
+                    <div class="royal-message">
+                        Enter our exclusive world of luxury jewellery, where every piece tells a story of royal craftsmanship and timeless elegance.
+                    </div>
+                    
+                    <button class="royal-enter-btn" id="royalEnterBtn">
+                        <i class="fas fa-gem royal-btn-icon"></i>
+                        Enter Royal Boutique
+                    </button>
+                    
+                    <div class="royal-loading-bar">
+                        <div class="royal-loading-progress"></div>
+                    </div>
+                    
+                    <div class="royal-countdown" id="royalCountdown">
+                        Entering automatically in <span id="countdownNumber">5</span> seconds
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add event listener to enter button
+        const enterBtn = overlay.querySelector('#royalEnterBtn');
+        enterBtn.addEventListener('click', () => this.enterBoutique());
+
+        return overlay;
+    }
+
+    createRoyalParticles() {
+        const particlesContainer = document.getElementById('royalParticles');
+        if (!particlesContainer) return;
+
+        // Limit particles for mobile performance
+        const particleCount = this.isMobile ? 5 : 9;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'royal-particle';
+            
+            // Randomize properties
+            const left = Math.random() * 100;
+            const delay = Math.random() * 10;
+            const duration = 6 + Math.random() * 4;
+            
+            particle.style.left = `${left}%`;
+            particle.style.animationDelay = `${delay}s`;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.background = this.getRandomGoldColor();
+            
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    getRandomGoldColor() {
+        const goldColors = [
+            '#d4af37', '#f5c542', '#ffd700', '#daa520', '#b8860b'
+        ];
+        return goldColors[Math.floor(Math.random() * goldColors.length)];
+    }
+
+    startRoyalCountdown() {
+        let countdown = 15;
+        const countdownEl = document.getElementById('countdownNumber');
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            if (countdownEl) countdownEl.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                this.enterBoutique();
+            }
+        }, 1000);
+    }
+
+    enterBoutique() {
+        console.log('🏰 Entering royal boutique...');
+        
+        // Mark as shown
+        sessionStorage.setItem('royalAnimationShown', 'true');
+        
+        const overlay = document.getElementById('royalWelcomeOverlay');
+        if (overlay) {
+            // Add exit animation
+            overlay.classList.add('exiting');
+            
+            setTimeout(() => {
+                // Remove overlay
+                overlay.remove();
+                
+                // Show main content
+                this.showMainContent();
+                
+                console.log('🎉 Royal animation completed');
+            }, 800);
+        } else {
+            this.showMainContent();
+        }
+    }
+
+    showMainContent() {
+        document.body.classList.add('loaded');
+        document.body.style.overflow = 'auto';
+        
+        // Initialize any additional animations
+        this.initializePageAnimations();
+    }
+
+    skipAnimation() {
+        console.log('⚡ Skipping royal animation');
+        this.showMainContent();
+    }
+
+    initializePageAnimations() {
+        // Initialize card animations
+        const cards = document.querySelectorAll('.card');
+        const revealCards = () => {
+            const triggerBottom = window.innerHeight * 0.85;
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                if (cardTop < triggerBottom) {
+                    card.classList.add('visible');
+                }
+            });
+        };
+
+        // Throttle scroll for performance
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(() => {
+                    revealCards();
+                    scrollTimeout = null;
+                }, 100);
+            }
+        });
+
+        // Initial reveal
+        revealCards();
+    }
+}
 // ===== MAIN APP CODE =====
 document.addEventListener("DOMContentLoaded", () => {
   console.log('DOMContentLoaded - Main app code running');
@@ -479,4 +534,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log('All JavaScript initialized successfully');
 });
+
 
