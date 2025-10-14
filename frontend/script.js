@@ -3,13 +3,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== REGISTER FORM =====
   const registerForm = document.getElementById("registerForm");
-<<<<<<< HEAD
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const name = document.getElementById("regName").value.trim();
     const address = document.getElementById("regAddress").value.trim();
     const phone = document.getElementById("regPhone").value.trim();
-=======
+
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -17,12 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const address = document.getElementById("regAddress").value.trim();
       const phone = document.getElementById("regPhone").value.trim();
       const checkbox = document.getElementById("termsCheckbox");
->>>>>>> 1c1a17e (Updated homepage styling and fixed navbar)
 
       if (!checkbox.checked) return alert("You must agree to the Terms and Privacy Policy.");
       if (!name || !address || !/^\d{10}$/.test(phone)) return alert("Please enter valid details.");
 
-<<<<<<< HEAD
     try {
       const res = await fetch(`${backendURL}/api/register`, {
         method: "POST",
@@ -42,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Server error. Try again later.");
     }
   });
-=======
       try {
         const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/register", {
           method: "POST",
@@ -63,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
->>>>>>> 1c1a17e (Updated homepage styling and fixed navbar)
+
 
   // ===== LOGIN FORM WITH OTP =====
   const sendOtpBtn = document.getElementById("sendOtpBtn");
@@ -79,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sendOtpBtn.addEventListener("click", async () => {
       const phone = document.getElementById("loginPhone").value.trim();
       if (!/^\d{10}$/.test(phone)) return alert("Enter a valid 10-digit phone number.");
->>>>>>> 1c1a17e (Updated homepage styling and fixed navbar)
+
 
       try {
         const res = await fetch(`https://jewellery-website-5xi0.onrender.com/api/login?phone=${encodeURIComponent(phone)}`);
@@ -153,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-<<<<<<< HEAD
+
     try {
       const res = await fetch(`${backendURL}/api/login?phone=${encodeURIComponent(phone)}`);
       const data = await res.json();
@@ -219,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error(err);
       alert("Unable to add item. Try again later.");
->>>>>>> 1c1a17e (Updated homepage styling and fixed navbar)
+
     }
   }
 
@@ -570,3 +566,4 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
+
