@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Jewellery Shop</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f8f8f8; margin:0; padding:0; }
+    .container { max-width: 600px; margin: 30px auto; background: white; padding: 20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+    h2 { text-align:center; }
+    .item { display:flex; justify-content:space-between; margin: 10px 0; }
+    .total { font-weight:bold; text-align:right; margin-top:20px; }
+    .payment-btn { margin-top: 20px; padding: 10px 20px; background:#ffb700; color:white; border:none; border-radius:8px; cursor:pointer; width:100%; font-size:16px; }
+    .payment-btn:hover { background:#e0a200; }
+    select { width:100%; padding:8px; margin-top:10px; font-size:16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Checkout</h2>
+    <div id="checkout-items"></div>
+    <div class="total" id="totalAmount"></div>
+    
+    <label for="paymentMethod">Choose Payment Method:</label>
+    <select id="paymentMethod">
+      <option value="paytm">PayTM</option>
+      <option value="gpay">Google Pay</option>
+      <option value="phonepay">PhonePe</option>
+      <option value="creditcard">Credit Card</option>
+    </select>
+
+    <button id="payBtn" class="payment-btn">Pay Now</button>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const cart = JSON.parse(localStorage.getItem("checkoutCart")) || [];
+      const checkoutContainer = document.getElementById("checkout-items");
+      const totalAmountEl = document.getElementById("totalAmount");
+      
+      if (cart.length === 0) {
+        checkoutContainer.innerHTML = "<p>Your cart is empty!</p>";
+        totalAmountEl.textContent = "";
+        return;
+      }
+
+      let total = 0;
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        const div = document.createElement("div");
+        div.classList.add("item");
+        div.innerHTML = `<span>${item.name} x${item.quantity}</span> <span>₹${item.price*item.quantity}</span>`;
+        checkoutContainer.appendChild(div);
+      });
+
+      totalAmountEl.textContent = `Total Amount: ₹${total.toLocaleString()}`;
+
+      document.getElementById("payBtn").addEventListener("click", () => {
+        const paymentMethod = document.getElementById("paymentMethod").value;
+        alert(`Payment of ₹${total} via ${paymentMethod} is being processed!`);
+        // Here you can redirect to actual payment gateway or show a success message
+        localStorage.removeItem("checkoutCart");
+        localStorage.removeItem("cart");
+        window.location.href = "index.html"; // back to homepage
+      });
+    });
+  </script>
+</body>
+</html>

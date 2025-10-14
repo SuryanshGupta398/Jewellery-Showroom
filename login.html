@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In / Register | Shimmer & Shine</title>
+  <link rel="stylesheet" href="login.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <div class="decoration top-left"><i class="fas fa-gem"></i></div>
+      <div class="decoration top-right"><i class="fas fa-crown"></i></div>
+      <div class="decoration bottom-left"><i class="fas fa-ring"></i></div>
+      <div class="decoration bottom-right"><i class="fas fa-star"></i></div>
+      
+      <div class="login-icon">
+        <i class="fas fa-gem"></i>
+      </div>
+      
+      <h2>Welcome</h2>
+      <p class="subtitle">Login or Register to explore our collections</p>
+
+      <!-- REGISTER FORM -->
+      <form id="registerForm">
+        <h3>Register</h3>
+        
+        <div class="input-group">
+          <label for="regName">Name</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user"></i>
+            <input type="text" id="regName" placeholder="Enter your name" required />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="regAddress">Address</label>
+          <div class="input-with-icon">
+            <i class="fas fa-home"></i>
+            <input type="text" id="regAddress" placeholder="Enter your address" required />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="regPhone">Phone Number</label>
+          <div class="input-with-icon">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="regPhone" placeholder="Enter your phone number" required />
+          </div>
+        </div>
+
+        <div class="input-group checkbox-group">
+          <input type="checkbox" id="termsCheckbox" />
+          <label for="termsCheckbox">
+            I agree to the <a href="terms.html" target="_blank">Terms</a> and
+            <a href="privacy.html" target="_blank">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn">
+          <i class="fas fa-user-plus"></i> Register
+        </button>
+      </form>
+
+      <hr style="margin:20px 0;">
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm">
+        <h3>Login</h3>
+        <div class="input-group">
+          <label for="loginPhone">Phone Number</label>
+          <div class="input-with-icon">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="loginPhone" placeholder="Enter your phone number" required />
+          </div>
+        </div>
+
+        <div class="input-group otp-group" style="display:none;">
+          <label for="otp">Enter OTP</label>
+          <div class="input-with-icon">
+            <i class="fas fa-key"></i>
+            <input type="text" id="otp" placeholder="Enter OTP" maxlength="6" />
+          </div>
+        </div>
+
+        <button type="button" class="btn" id="sendOtpBtn">
+          <i class="fas fa-paper-plane"></i> Send OTP
+        </button>
+        <button type="submit" class="btn" id="loginBtn" style="display:none;">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+      </form>
+
+      <a href="index.html" class="back-home">← Back to Home</a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

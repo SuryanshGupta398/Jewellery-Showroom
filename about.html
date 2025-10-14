@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Royal Jewelry</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #d4af37;
+      --primary-dark: #b8962b;
+      --secondary: #f5c542;
+      --dark: #0a0a0a;
+      --dark-light: #1a1a1a;
+      --text: #f5f5f5;
+      --text-light: #e0e0e0;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      --transition: all 0.4s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--dark);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    header {
+      background: rgba(26, 26, 26, 0.95);
+      padding: 20px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      transition: var(--transition);
+    }
+
+    header.scrolled {
+      padding: 15px 50px;
+      background: rgba(10, 10, 10, 0.98);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: var(--secondary);
+    }
+
+    header nav {
+      display: flex;
+      gap: 30px;
+    }
+
+    header nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      position: relative;
+      transition: var(--transition);
+      padding: 8px 0;
+    }
+
+    header nav a:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: var(--transition);
+    }
+
+    header nav a:hover {
+      color: var(--primary);
+    }
+
+    header nav a:hover:after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-top: 80px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.9)),
+        url('https://images.unsplash.com/photo-1589916754969-3f05774d6ad0?auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+      z-index: -1;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      padding: 0 20px;
+      transform: translateY(30px);
+      opacity: 0;
+      animation: fadeUp 1.2s forwards 0.5s;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 60px;
+      margin-bottom: 20px;
+      color: var(--primary);
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 22px;
+      color: var(--text-light);
+      margin-bottom: 30px;
+    }
+
+    .hero-divider {
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      margin: 0 auto 30px;
+      border-radius: 2px;
+    }
+
+    /* Content Section */
+    .content {
+      padding: 100px 50px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .content-section {
+      margin-bottom: 100px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+
+    .content-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      margin-bottom: 20px;
+      color: var(--primary);
+      text-align: center;
+      position: relative;
+      display: inline-block;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .content h2:after {
+      content: '';
+      position: absolute;
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    .content p {
+      font-size: 18px;
+      margin-bottom: 25px;
+      color: var(--text-light);
+      text-align: center;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Stats Section */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin: 60px 0;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 30px 20px;
+      background: var(--dark-light);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .stat-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+
+    .stat-number {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .stat-label {
+      font-size: 18px;
+      color: var(--text-light);
+    }
+
+    /* Team Section */
+    .team {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .team-member {
+      background: var(--dark-light);
+      border-radius: 16px;
+      overflow: hidden;
+      text-align: center;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(212, 175, 55, 0.1);
+      position: relative;
+    }
+
+    .team-member:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+
+    .member-image {
+      height: 280px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .member-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .team-member:hover .member-image img {
+      transform: scale(1.1);
+    }
+
+    .member-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent 0%, rgba(10, 10, 10, 0.7) 100%);
+    }
+
+    .member-info {
+      padding: 25px 20px;
+      position: relative;
+    }
+
+    .team-member h3 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .team-member p {
+      font-size: 16px;
+      color: var(--text-light);
+      margin-bottom: 15px;
+    }
+
+    .member-social {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .member-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--primary);
+      border-radius: 50%;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .member-social a:hover {
+      background: var(--primary);
+      color: var(--dark);
+      transform: translateY(-3px);
+    }
+
+    /* Values Section */
+    .values {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 60px;
+    }
+
+    .value-item {
+      background: var(--dark-light);
+      padding: 40px 30px;
+      border-radius: 16px;
+      text-align: center;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .value-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+
+    .value-icon {
+      font-size: 48px;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .value-item h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+
+    .value-item p {
+      font-size: 16px;
+      color: var(--text-light);
+      text-align: center;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark-light);
+      padding: 60px 0 30px;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      border-radius: 50%;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .social-links a:hover {
+      background: var(--primary);
+      color: var(--dark);
+      transform: translateY(-5px);
+    }
+
+    .copyright {
+      color: #888;
+      font-size: 14px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Floating Elements */
+    .floating-elements {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .floating-element {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0.7;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .hero h1 {
+        font-size: 48px;
+      }
+      
+      .content {
+        padding: 80px 30px;
+      }
+      
+      header {
+        padding: 15px 30px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 36px;
+      }
+      
+      .hero p {
+        font-size: 18px;
+      }
+      
+      .content h2 {
+        font-size: 32px;
+      }
+      
+      .content p {
+        font-size: 16px;
+      }
+      
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      header nav {
+        gap: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 28px;
+      }
+      
+      .content {
+        padding: 60px 20px;
+      }
+      
+      .stats {
+        grid-template-columns: 1fr;
+      }
+      
+      header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+      }
+      
+      .footer-links {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header id="header">
+    <div class="logo">Royal<span>Jewelry</span></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="floating-elements">
+      <div class="floating-element" style="left: 10%; top: 20%;">💎</div>
+      <div class="floating-element" style="left: 90%; top: 30%; animation-delay: 1s;">✨</div>
+      <div class="floating-element" style="left: 15%; top: 70%; animation-delay: 2s;">🔶</div>
+      <div class="floating-element" style="left: 85%; top: 60%; animation-delay: 3s;">💍</div>
+    </div>
+    <div class="hero-content">
+      <h1>Our Legacy of Excellence</h1>
+      <div class="hero-divider"></div>
+      <p>Discover the story behind our exquisite craftsmanship and timeless jewelry collections that have captivated hearts for generations.</p>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="content">
+    <div class="content-section" id="our-story">
+      <h2>Our Story</h2>
+      <p>Founded with a vision to redefine luxury, Royal Jewelry has been at the forefront of exquisite craftsmanship since our establishment. Each piece in our collection is a testament to our dedication to quality, beauty, and timeless elegance.</p>
+      <p>Our master artisans combine centuries-old techniques with contemporary design, creating jewelry that not only adorns but tells a story. From the initial sketch to the final polish, every detail is meticulously crafted to perfection.</p>
+      
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Years of Excellence</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">5000+</div>
+          <div class="stat-label">Happy Customers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">50+</div>
+          <div class="stat-label">Award Winning Designs</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Satisfaction Guaranteed</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section" id="our-values">
+      <h2>Our Values</h2>
+      <p>At Royal Jewelry, we believe that true luxury lies in the details. Our core values guide everything we do, from design to customer service.</p>
+      
+      <div class="values">
+        <div class="value-item">
+          <div class="value-icon"><i class="fas fa-gem"></i></div>
+          <h3>Quality Craftsmanship</h3>
+          <p>We use only the finest materials and employ master artisans to ensure each piece meets our exacting standards.</p>
+        </div>
+        <div class="value-item">
+          <div class="value-icon"><i class="fas fa-heart"></i></div>
+          <h3>Passion for Design</h3>
+          <p>Our designers are driven by a passion for creating pieces that inspire emotion and celebrate life's special moments.</p>
+        </div>
+        <div class="value-item">
+          <div class="value-icon"><i class="fas fa-handshake"></i></div>
+          <h3>Customer Commitment</h3>
+          <p>We build lasting relationships with our clients, ensuring their complete satisfaction with every purchase.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section" id="our-team">
+      <h2>Meet Our Team</h2>
+      <p>Behind every exquisite piece is a team of passionate individuals dedicated to bringing your vision to life.</p>
+      
+      <div class="team">
+        <div class="team-member">
+          <div class="member-image">
+            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=500&q=80" alt="Jane Doe">
+          </div>
+          <div class="member-info">
+            <h3>Jane Doe</h3>
+            <p>Founder & CEO</p>
+            <p>With over 20 years in the jewelry industry, Jane's vision drives our commitment to excellence.</p>
+            <div class="member-social">
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="member-image">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80" alt="John Smith">
+          </div>
+          <div class="member-info">
+            <h3>John Smith</h3>
+            <p>Master Jeweler</p>
+            <p>A third-generation jeweler, John brings traditional techniques and innovative approaches to our designs.</p>
+            <div class="member-social">
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="member-image">
+            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=500&q=80" alt="Emily Rose">
+          </div>
+          <div class="member-info">
+            <h3>Emily Rose</h3>
+            <p>Creative Director</p>
+            <p>Emily's innovative designs have earned international recognition and multiple industry awards.</p>
+            <div class="member-social">
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="https://www.instagram.com/pmjewellerspvtltd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">Royal Jewelry</div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="collections.html">Collections</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-pinterest"></i></a>
+      </div>
+      <div class="copyright">
+        &copy; 2025 Royal Jewelry. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+      const header = document.getElementById('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Scroll animations
+    document.addEventListener('DOMContentLoaded', function() {
+      const contentSections = document.querySelectorAll('.content-section');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      contentSections.forEach(section => {
+        observer.observe(section);
+      });
+    });
+  </script>
+</body>
+</html>

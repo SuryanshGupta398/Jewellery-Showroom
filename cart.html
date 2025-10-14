@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart - Jewellery Shop</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #ffb700;
+      --primary-dark: #e0a200;
+      --secondary: #d4af37;
+      --accent: #c19a6b;
+      --light: #f8f8f8;
+      --dark: #333;
+      --danger: #e74c3c;
+      --danger-dark: #c0392b;
+      --success: #2ecc71;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      color: var(--dark);
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      padding: 20px 25px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+      transform: rotate(30deg);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .container:hover {
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 25px;
+      font-size: 28px;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    h2::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 3px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: 20px 0;
+      transition: var(--transition);
+      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .cart-item:hover {
+      background-color: rgba(255, 183, 0, 0.05);
+      border-radius: 10px;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-image {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-right: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .item-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .info {
+      flex-grow: 1;
+    }
+
+    .info h3 {
+      margin: 0 0 8px 0;
+      color: var(--dark);
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .info p {
+      margin: 5px 0;
+      color: #666;
+      font-size: 16px;
+    }
+
+    .price {
+      font-weight: bold;
+      color: var(--secondary);
+      font-size: 18px;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .quantity-btn {
+      background: var(--primary);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: bold;
+    }
+
+    .quantity-btn:hover {
+      background: var(--primary-dark);
+      transform: scale(1.1);
+    }
+
+    .quantity-display {
+      margin: 0 12px;
+      font-weight: bold;
+      min-width: 30px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .remove-btn {
+      background: var(--danger);
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .remove-btn:hover {
+      background: var(--danger-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+
+    #total {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 30px;
+      color: var(--dark);
+      padding: 20px;
+      background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .total-amount {
+      color: var(--secondary);
+      font-size: 28px;
+    }
+
+    .empty {
+      text-align: center;
+      font-size: 20px;
+      color: #888;
+      padding: 60px 0;
+    }
+
+    .empty i {
+      font-size: 60px;
+      margin-bottom: 20px;
+      color: #ddd;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 12px;
+      text-decoration: none;
+      margin-top: 30px;
+      font-weight: 600;
+      font-size: 18px;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(255, 183, 0, 0.3);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(255, 183, 0, 0.4);
+    }
+
+    .checkout-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .checkout-btn {
+      background: linear-gradient(135deg, var(--success) 0%, #27ae60 100%);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 18px;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checkout-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(46, 204, 113, 0.4);
+    }
+
+    .checkout-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .items-count {
+      background: var(--primary);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px 0;
+      color: #666;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 183, 0, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s ease-in-out infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transform: translateX(150%);
+      transition: transform 0.4s ease;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    .notification.success {
+      background: var(--success);
+    }
+
+    .notification.error {
+      background: var(--danger);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        margin-bottom: 15px;
+      }
+
+      .item-image {
+        align-self: center;
+        margin-bottom: 15px;
+      }
+
+      .info {
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      .remove-btn {
+        align-self: flex-end;
+      }
+
+      .checkout-section {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .back-btn,
+      .checkout-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <i class="fas fa-shopping-cart"></i> Your Shopping Cart
+  </header>
+
+  <div class="container">
+    <div class="cart-header">
+      <h2>Items in Your Cart</h2>
+      <div class="items-count" id="items-count">0 items</div>
+    </div>
+
+    <div id="cart-items">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading your cart...</p>
+      </div>
+    </div>
+
+    <div id="total">Total: <span class="total-amount">₹0</span></div>
+
+    <div class="checkout-section">
+      <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Continue Shopping
+      </a>
+      <button class="checkout-btn" id="checkout-btn" disabled>
+        <i class="fas fa-lock"></i> Proceed to Checkout
+      </button>
+    </div>
+  </div>
+
+  <div id="notification" class="notification"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const userPhone = localStorage.getItem("userPhone");
+      const cartContainer = document.getElementById("cart-items");
+      const totalPriceEl = document.getElementById("total");
+      const itemsCountEl = document.getElementById("items-count");
+      const checkoutBtn = document.getElementById("checkout-btn");
+      const notification = document.getElementById("notification");
+
+      if (!userPhone) {
+        showNotification("Please login to view your cart", "error");
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+        return;
+      }
+
+      function showNotification(message, type) {
+        notification.textContent = message;
+        notification.className = `notification ${type}`;
+        notification.classList.add('show');
+
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+      }
+
+      async function loadCart() {
+        try {
+          const res = await fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${encodeURIComponent(userPhone)}`);
+          const data = await res.json();
+
+          if (!data.cart || data.cart.length === 0) {
+            cartContainer.innerHTML = `
+              <div class="empty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Your cart is empty.</p>
+                <p>Add some beautiful jewellery to get started!</p>
+              </div>
+            `;
+            totalPriceEl.innerHTML = "Total: <span class='total-amount'>₹0</span>";
+            itemsCountEl.textContent = "0 items";
+            checkoutBtn.disabled = true;
+            return;
+          }
+
+          cartContainer.innerHTML = "";
+          let total = 0;
+          let itemCount = 0;
+
+          data.cart.forEach((item, index) => {
+            total += item.price * item.quantity;
+            itemCount += item.quantity;
+
+            const div = document.createElement("div");
+            div.classList.add("cart-item");
+            div.style.animationDelay = `${index * 0.1}s`;
+            div.innerHTML = `
+              <img src="${item.image}" alt="${item.name}" class="item-image">
+              <div class="info">
+                <h3>${item.name}</h3>
+                <p class="price">₹${item.price.toLocaleString()}</p>
+                <div class="quantity-controls">
+                  <button class="quantity-btn decrease" data-id="${item.productId}">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <span class="quantity-display">${item.quantity}</span>
+                  <button class="quantity-btn increase" data-id="${item.productId}">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+              <button class="remove-btn" data-id="${item.productId}">
+                <i class="fas fa-trash"></i> Remove
+              </button>
+            `;
+            cartContainer.appendChild(div);
+          });
+
+          totalPriceEl.innerHTML = `Total: <span class="total-amount">₹${total.toLocaleString()}</span>`;
+          itemsCountEl.textContent = `${itemCount} ${itemCount === 1 ? 'item' : 'items'}`;
+          checkoutBtn.disabled = false;
+
+          // ===== Remove item =====
+          document.querySelectorAll(".remove-btn").forEach((btn) => {
+            btn.addEventListener("click", async (e) => {
+              const productId = e.currentTarget.dataset.id;
+              try {
+                await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/remove", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ phone: userPhone, productId }),
+                });
+                showNotification("Item removed from cart", "success");
+                loadCart();
+              } catch (err) {
+                showNotification("Error removing item", "error");
+              }
+            });
+          });
+
+          // ===== Quantity update =====
+          document.querySelectorAll(".increase").forEach(btn => {
+            btn.addEventListener("click", async e => {
+              const productId = e.currentTarget.dataset.id;
+              const qtySpan = e.currentTarget.parentElement.querySelector(".quantity-display");
+              let newQty = parseInt(qtySpan.textContent) + 1;
+
+              try {
+                await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/update", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ phone: userPhone, productId, quantity: newQty }),
+                });
+                showNotification("Cart updated", "success");
+                loadCart();
+              } catch (err) {
+                showNotification("Error updating cart", "error");
+              }
+            });
+          });
+
+          document.querySelectorAll(".decrease").forEach(btn => {
+            btn.addEventListener("click", async e => {
+              const productId = e.currentTarget.dataset.id;
+              const qtySpan = e.currentTarget.parentElement.querySelector(".quantity-display");
+              let newQty = parseInt(qtySpan.textContent) - 1;
+
+              if (newQty < 1) {
+                showNotification("Quantity cannot be less than 1", "error");
+                return;
+              }
+
+              try {
+                await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/update", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ phone: userPhone, productId, quantity: newQty }),
+                });
+                showNotification("Cart updated", "success");
+                loadCart();
+              } catch (err) {
+                showNotification("Error updating cart", "error");
+              }
+            });
+          });
+
+        } catch (err) {
+          console.error(err);
+          showNotification("Error loading your cart", "error");
+        }
+      }
+
+      // Checkout button functionality
+
+  if (!checkoutBtn) return;
+
+  checkoutBtn.addEventListener("click", async () => {
+    if (!userPhone) {
+      alert("Please login first.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    try {
+      const res = await fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${encodeURIComponent(userPhone)}`);
+      const data = await res.json();
+
+      if (!data.cart || data.cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+
+      // store the cart temporarily for checkout page
+      localStorage.setItem("checkoutCart", JSON.stringify(data.cart));
+      window.location.href = "checkout.html";
+    } catch (err) {
+      console.error(err);
+      alert("Error fetching cart data.");
+    }
+  });
+
+      loadCart();
+    });
+  </script>
+</body>
+
+</html>
