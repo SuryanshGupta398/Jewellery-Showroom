@@ -48,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const otpGroup = document.querySelector(".otp-group");
   let generatedOtp = "";
 
-<<<<<<< HEAD
   sendOtpBtn.addEventListener("click", async () => {
     const phone = document.getElementById("loginPhone").value.trim();
 =======
@@ -547,5 +546,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
+
 
 
