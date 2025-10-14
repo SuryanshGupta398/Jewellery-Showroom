@@ -1,4 +1,4 @@
-// ===== ROYAL PREMIUM ANIMATION - MOBILE OPTIMIZED =====
+// ===== ROYAL PREMIUM ANIMATION WITH FLOATING ELEMENTS =====
 class RoyalAnimation {
     constructor() {
         this.animationShown = sessionStorage.getItem('royalAnimationShown');
@@ -13,7 +13,15 @@ class RoyalAnimation {
     init() {
         const isHomePage = this.isHomePage();
         
-        if (isHomePage && !this.animationShown) {
+        // Check if user wants to see animation again (via URL parameter or button)
+        const showAgain = new URLSearchParams(window.location.search).get('showAnimation') === 'true';
+        const forceShow = localStorage.getItem('forceShowAnimation') === 'true';
+        
+        if (isHomePage && (!this.animationShown || showAgain || forceShow)) {
+            // Clear force show flag after use
+            if (forceShow) {
+                localStorage.removeItem('forceShowAnimation');
+            }
             this.showRoyalAnimation();
         } else {
             this.skipAnimation();
@@ -38,8 +46,9 @@ class RoyalAnimation {
         const overlay = this.createRoyalOverlay();
         document.body.appendChild(overlay);
 
-        // Initialize particles (limited for mobile)
+        // Initialize particles and floating elements
         this.createRoyalParticles();
+        this.createAnimationFloatingElements();
 
         // Start countdown
         this.startRoyalCountdown();
@@ -53,6 +62,7 @@ class RoyalAnimation {
         overlay.innerHTML = `
             <div class="royal-pattern"></div>
             <div class="royal-particles" id="royalParticles"></div>
+            <div class="royal-floating-elements" id="royalFloatingElements"></div>
             
             <div class="royal-welcome-container">
                 <div class="royal-welcome-card">
@@ -72,6 +82,17 @@ class RoyalAnimation {
                         <i class="fas fa-gem royal-btn-icon"></i>
                         Enter Royal Boutique
                     </button>
+
+                    <div class="royal-options">
+                        <label class="royal-checkbox">
+                            <input type="checkbox" id="showAgainCheckbox">
+                            <span class="checkmark"></span>
+                            Show this animation next time
+                        </label>
+                        <button class="royal-skip-btn" id="royalSkipBtn">
+                            Skip Animation
+                        </button>
+                    </div>
                     
                     <div class="royal-loading-bar">
                         <div class="royal-loading-progress"></div>
@@ -84,9 +105,21 @@ class RoyalAnimation {
             </div>
         `;
 
-        // Add event listener to enter button
+        // Add event listeners
         const enterBtn = overlay.querySelector('#royalEnterBtn');
         enterBtn.addEventListener('click', () => this.enterBoutique());
+
+        const skipBtn = overlay.querySelector('#royalSkipBtn');
+        skipBtn.addEventListener('click', () => this.skipAnimation());
+
+        const checkbox = overlay.querySelector('#showAgainCheckbox');
+        checkbox.addEventListener('change', (e) => {
+            localStorage.setItem('showAnimationNextTime', e.target.checked.toString());
+        });
+
+        // Set checkbox state
+        const showNextTime = localStorage.getItem('showAnimationNextTime') === 'true';
+        checkbox.checked = showNextTime;
 
         return overlay;
     }
@@ -116,6 +149,37 @@ class RoyalAnimation {
         }
     }
 
+    createAnimationFloatingElements() {
+        const floatingContainer = document.getElementById('royalFloatingElements');
+        if (!floatingContainer) return;
+
+        const animationJewels = ['💎', '✨', '🌟', '💫', '⭐', '🔮', '💍', '🔶', '💠'];
+        const elementCount = this.isMobile ? 8 : 12;
+
+        for (let i = 0; i < elementCount; i++) {
+            const element = document.createElement('div');
+            element.className = 'royal-floating-element';
+            
+            // Random properties for natural movement
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            const delay = Math.random() * 5;
+            const duration = 10 + Math.random() * 8;
+            const size = 1.5 + Math.random() * 1.5;
+            
+            element.textContent = animationJewels[Math.floor(Math.random() * animationJewels.length)];
+            element.style.left = `${left}%`;
+            element.style.top = `${top}%`;
+            element.style.animationDelay = `${delay}s`;
+            element.style.animationDuration = `${duration}s`;
+            element.style.fontSize = `${size}rem`;
+            element.style.opacity = '0.7';
+            element.style.filter = `hue-rotate(${Math.random() * 360}deg) brightness(1.2)`;
+            
+            floatingContainer.appendChild(element);
+        }
+    }
+
     getRandomGoldColor() {
         const goldColors = [
             '#d4af37', '#f5c542', '#ffd700', '#daa520', '#b8860b'
@@ -124,7 +188,7 @@ class RoyalAnimation {
     }
 
     startRoyalCountdown() {
-        let countdown = 5;
+        let countdown = 15;
         const countdownEl = document.getElementById('countdownNumber');
         const countdownInterval = setInterval(() => {
             countdown--;
@@ -140,8 +204,15 @@ class RoyalAnimation {
     enterBoutique() {
         console.log('🏰 Entering royal boutique...');
         
-        // Mark as shown
-        sessionStorage.setItem('royalAnimationShown', 'true');
+        // Check if user wants to see animation next time
+        const showNextTime = localStorage.getItem('showAnimationNextTime') === 'true';
+        if (showNextTime) {
+            // Don't set session storage, so animation shows next time
+            console.log('🎭 Animation will show again next time');
+        } else {
+            // Mark as shown for this session
+            sessionStorage.setItem('royalAnimationShown', 'true');
+        }
         
         const overlay = document.getElementById('royalWelcomeOverlay');
         if (overlay) {
@@ -168,19 +239,57 @@ class RoyalAnimation {
         
         // Initialize any additional animations
         this.initializePageAnimations();
+        
+        // Add "Show Animation Again" button to navbar
+        this.addAnimationToggleButton();
     }
 
     skipAnimation() {
         console.log('⚡ Skipping royal animation');
+        // Mark as shown for this session
+        sessionStorage.setItem('royalAnimationShown', 'true');
         this.showMainContent();
+        
+        const overlay = document.getElementById('royalWelcomeOverlay');
+        if (overlay) {
+            overlay.remove();
+        }
+    }
+
+    addAnimationToggleButton() {
+        // Add button to show animation again
+        const navLinks = document.querySelector('.nav-links');
+        if (navLinks && !document.getElementById('showAnimationBtn')) {
+            const showAnimationBtn = document.createElement('a');
+            showAnimationBtn.id = 'showAnimationBtn';
+            showAnimationBtn.href = '#';
+            showAnimationBtn.className = 'btn royal-animation-btn';
+            showAnimationBtn.innerHTML = '<i class="fas fa-crown"></i> Show Intro';
+            showAnimationBtn.style.marginLeft = '10px';
+            showAnimationBtn.style.background = 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)';
+            
+            showAnimationBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showAnimationAgain();
+            });
+            
+            navLinks.appendChild(showAnimationBtn);
+        }
+    }
+
+    showAnimationAgain() {
+        // Force show animation on next load
+        localStorage.setItem('forceShowAnimation', 'true');
+        // Reload the page
+        window.location.reload();
     }
 
     initializePageAnimations() {
         // Initialize card animations
         this.initializeCardAnimations();
         
-        // Initialize floating elements
-        this.initializeFloatingElements();
+        // Initialize homepage floating elements
+        this.initializeHomepageFloatingElements();
     }
 
     initializeCardAnimations() {
@@ -209,66 +318,32 @@ class RoyalAnimation {
         // Initial reveal
         revealCards();
     }
-}
 
-// ===== FLOATING ELEMENTS MANAGER =====
-class FloatingElementsManager {
-    constructor() {
-        this.isMobile = window.innerWidth <= 768;
-        this.floatingElements = [];
-        this.init();
-    }
-
-    init() {
-        // Only initialize on homepage
-        if (this.isHomePage()) {
-            this.createFloatingElements();
-            this.setupResizeHandler();
-        }
-    }
-
-    isHomePage() {
-        return document.querySelector('.hero') !== null && 
-               !window.location.pathname.includes('login.html') &&
-               !window.location.pathname.includes('register.html');
-    }
-
-    createFloatingElements() {
+    initializeHomepageFloatingElements() {
         const heroSection = document.querySelector('.hero');
-        if (!heroSection) return;
-
-        // Remove existing floating elements
-        this.destroy();
+        if (!heroSection || document.getElementById('floatingElements')) return;
 
         const floatingContainer = document.createElement('div');
         floatingContainer.className = 'floating-elements';
         floatingContainer.id = 'floatingElements';
         
         const jewels = ['💎', '✨', '🔶', '💍', '🌟', '💫', '⭐', '🔸', '💠'];
-        
-        // Limit elements for mobile performance
         const elementCount = this.isMobile ? 6 : 9;
         
         for (let i = 0; i < elementCount; i++) {
-            const element = this.createFloatingElement(jewels[i], i, elementCount);
+            const element = this.createHomepageFloatingElement(jewels[i], i, elementCount);
             floatingContainer.appendChild(element);
-            this.floatingElements.push(element);
         }
         
         heroSection.appendChild(floatingContainer);
-        
-        console.log(`🎈 Created ${elementCount} floating elements`);
     }
 
-    createFloatingElement(jewel, index, totalCount) {
+    createHomepageFloatingElement(jewel, index, totalCount) {
         const element = document.createElement('div');
         element.className = 'floating-element';
         element.textContent = jewel;
         
-        // Calculate position for even distribution
         const position = ((index + 1) * (100 / (totalCount + 1)));
-        
-        // Randomize properties for natural look
         const delay = index * 0.7;
         const duration = 8 + Math.random() * 4;
         const size = 1.2 + Math.random() * 0.8;
@@ -278,36 +353,11 @@ class FloatingElementsManager {
         element.style.animationDuration = `${duration}s`;
         element.style.fontSize = `${size}rem`;
         element.style.opacity = '0.8';
-        
-        // Add slight rotation for variety
         element.style.transform = `rotate(${Math.random() * 360}deg)`;
         
         return element;
     }
-
-    setupResizeHandler() {
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                const newIsMobile = window.innerWidth <= 768;
-                if (newIsMobile !== this.isMobile) {
-                    this.isMobile = newIsMobile;
-                    this.createFloatingElements();
-                }
-            }, 250);
-        });
-    }
-
-    destroy() {
-        const existingContainer = document.getElementById('floatingElements');
-        if (existingContainer) {
-            existingContainer.remove();
-        }
-        this.floatingElements = [];
-    }
 }
-
 // ===== MAIN APP CODE =====
 document.addEventListener("DOMContentLoaded", () => {
     console.log('DOMContentLoaded - Main app code running');
@@ -685,4 +735,5 @@ document.addEventListener("DOMContentLoaded", () => {
         animation-duration: 6s;
     }
 }*/
+
 
