@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const backendURL = "https://jewellery-website-5xi0.onrender.com"; // <-- your Render backend URL
-
   // ===== REGISTER FORM =====
   const registerForm = document.getElementById("registerForm");
   if (registerForm) {
@@ -12,20 +10,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const checkbox = document.getElementById("termsCheckbox");
 
       if (!checkbox.checked) return alert("You must agree to the Terms and Privacy Policy.");
-      if (!name || !address || !/^\d{10}$/.test(phone))
-        return alert("Please enter valid details.");
+      if (!name || !address || !/^\d{10}$/.test(phone)) return alert("Please enter valid details.");
 
       try {
-        const res = await fetch(`${backendURL}/api/register`, {
+        const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, phone, address }),
+          body: JSON.stringify({ name, address, phone })
         });
-
         const data = await res.json();
         if (res.ok) {
-          alert(data.message || "Registered successfully!");
+          alert(data.message || "Registration successful!");
           registerForm.reset();
+          window.location.href = "login.html";
         } else {
           alert(data.message || "Something went wrong!");
         }
@@ -48,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!/^\d{10}$/.test(phone)) return alert("Enter a valid 10-digit phone number.");
 
       try {
-        const res = await fetch(`${backendURL}/api/login?phone=${encodeURIComponent(phone)}`);
+        const res = await fetch(`https://jewellery-website-5xi0.onrender.com/api/login?phone=${encodeURIComponent(phone)}`);
         const data = await res.json();
         if (data.error) return alert(data.error);
 
@@ -78,7 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (enteredOtp === generatedOtp) {
         alert("Login successful!");
         localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("skipAnimation", "true");
         window.location.href = "index.html";
       } else {
         alert("Invalid OTP. Try again.");
@@ -92,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   // ===== QUANTITY INCREMENT / DECREMENT ON HOMEPAGE =====
-  document.querySelectorAll(".card-info").forEach((card) => {
+  document.querySelectorAll(".card-info").forEach(card => {
     const decreaseBtn = card.querySelector(".decrease");
     const increaseBtn = card.querySelector(".increase");
     const qtySpan = card.querySelector(".qty");
@@ -123,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const price = parseInt(card.querySelector(".price").innerText.replace(/[₹,]/g, ""));
     const image = card.closest(".card").querySelector("img").src;
 
+
     let quantity = 1;
     const qtyEl = card.querySelector(".qty");
     if (qtyEl) quantity = parseInt(qtyEl.textContent) || 1;
@@ -130,16 +127,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const product = { productId, name, price, image, quantity };
 
     try {
-      const res = await fetch(`${backendURL}/api/cart/add`, {
+      const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: userPhone, product }),
+        body: JSON.stringify({ phone: userPhone, product })
       });
       const data = await res.json();
       if (res.ok) {
         alert(`${name} added to your cart (x${quantity})!`);
         updateCartUI(data.cart);
-        if (qtyEl) qtyEl.textContent = 1;
+
+        if (qtyEl) qtyEl.textContent = 1; // reset after add
       } else {
         alert(data.message || "Error adding item to cart");
       }
@@ -175,27 +173,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalEl = document.querySelector(".cart-total");
     if (totalEl) totalEl.textContent = `Total: ₹${total}`;
 
-    document.querySelectorAll(".increase").forEach((btn) =>
-      btn.addEventListener("click", () => changeQuantity(btn.dataset.id, 1))
-    );
-    document.querySelectorAll(".decrease").forEach((btn) =>
-      btn.addEventListener("click", () => changeQuantity(btn.dataset.id, -1))
-    );
+    document.querySelectorAll(".increase").forEach(btn => {
+      btn.addEventListener("click", () => changeQuantity(btn.dataset.id, 1));
+    });
+    document.querySelectorAll(".decrease").forEach(btn => {
+      btn.addEventListener("click", () => changeQuantity(btn.dataset.id, -1));
+    });
   }
 
   // ===== CHANGE QUANTITY (Backend) =====
   async function changeQuantity(productId, delta) {
     try {
-      const resCart = await fetch(`${backendURL}/api/cart?phone=${userPhone}`);
+      const phone = localStorage.getItem("userPhone");
+      const resCart = await fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${phone}`);
       const data = await resCart.json();
-      const item = data.cart.find((i) => i.productId === productId);
+      const item = data.cart.find(i => i.productId === productId);
       if (!item) return;
 
       const newQty = item.quantity + delta;
-      const res = await fetch(`${backendURL}/api/cart/update`, {
+      const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: userPhone, productId, quantity: newQty }),
+        body: JSON.stringify({ phone, productId, quantity: newQty })
       });
       const updatedData = await res.json();
       if (res.ok) updateCartUI(updatedData.cart);
@@ -208,15 +207,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== INITIALIZE CART =====
   if (isLoggedIn) {
-    fetch(`${backendURL}/api/cart?phone=${encodeURIComponent(userPhone)}`)
-      .then((res) => res.json())
-      .then((data) => updateCartUI(data.cart))
-      .catch((err) => console.error(err));
+    fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${encodeURIComponent(userPhone)}`)
+      .then(res => res.json())
+      .then(data => updateCartUI(data.cart))
+      .catch(err => console.error(err));
   }
 
   // ===== ADD TO CART BUTTON EVENTS =====
-  document.querySelectorAll(".add-to-cart").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+  document.querySelectorAll(".add-to-cart").forEach(btn => {
+    btn.addEventListener("click", e => {
       const card = e.target.closest(".card-info");
       if (!card) return;
       handleAddToCart(card);
@@ -228,8 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (isLoggedIn) {
     const displayName = userName || userPhone;
     const marquee = document.querySelector(".marquee");
-    if (marquee)
-      marquee.textContent = `🎉 Welcome, ${displayName}! Explore our jewellery collections! ✨`;
+    if (marquee) marquee.textContent = `🎉 Welcome, ${displayName}! Explore our jewellery collections! ✨`;
     if (loginBtnNav) loginBtnNav.style.display = "none";
 
     const navLinks = loginBtnNav?.parentNode;
@@ -239,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
       logoutBtn.href = "#";
       logoutBtn.className = "btn";
       logoutBtn.style.marginLeft = "10px";
-      logoutBtn.onclick = (e) => {
+      logoutBtn.onclick = e => {
         e.preventDefault();
         localStorage.clear();
         window.location.reload();
@@ -252,9 +250,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const cards = document.querySelectorAll(".card");
   function revealCards() {
     const triggerBottom = window.innerHeight * 0.85;
-    cards.forEach((card) => {
-      if (card.getBoundingClientRect().top < triggerBottom)
-        card.classList.add("visible");
+    cards.forEach(card => {
+      if (card.getBoundingClientRect().top < triggerBottom) card.classList.add("visible");
     });
   }
   window.addEventListener("scroll", revealCards);
@@ -264,34 +261,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const navbar = document.querySelector(".navbar");
   window.addEventListener("scroll", () => {
     if (navbar) {
-      navbar.style.background =
-        window.scrollY > 50
-          ? "rgba(255, 255, 255, 0.9)"
-          : "rgba(255, 255, 255, 0.25)";
+      navbar.style.background = window.scrollY > 50
+        ? "rgba(255, 255, 255, 0.9)"
+        : "rgba(255, 255, 255, 0.25)";
     }
   });
 
   // ===== HERO BUTTON SCROLL =====
   const scrollBtn = document.querySelector(".hero .btn");
-  if (scrollBtn)
-    scrollBtn.addEventListener("click", () => {
-      document
-        .querySelector("#collections")
-        .scrollIntoView({ behavior: "smooth" });
-    });
+  if (scrollBtn) scrollBtn.addEventListener("click", () => {
+    document.querySelector("#collections").scrollIntoView({ behavior: "smooth" });
+  });
 
   // ===== PAGE LOAD ANIMATION =====
   window.addEventListener("load", () => document.body.classList.add("loaded"));
-
-  // ===== FILTER FUNCTIONALITY =====
+  // ===== FILTER FUNCTIONALITY (FIXED) =====
   const filterButtons = document.querySelectorAll(".filter-btn");
-  filterButtons.forEach((btn) => {
+
+  filterButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-      filterButtons.forEach((b) => b.classList.remove("active"));
+      // Remove active class from all
+      filterButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
       const category = btn.dataset.category;
-      cards.forEach((card) => {
+
+      cards.forEach(card => {
         if (category === "all" || card.dataset.category === category) {
           card.style.display = "block";
           card.classList.add("visible");
@@ -301,9 +296,189 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
+      // Optional: smooth scroll to collections section
       const collectionsSection = document.querySelector("#collections");
-      if (collectionsSection)
+      if (collectionsSection) {
         collectionsSection.scrollIntoView({ behavior: "smooth" });
+      }
     });
   });
+
+  // ===== FILTER FUNCTIONALITY =====
 });
+
+ // Premium Opening Animation
+document.addEventListener('DOMContentLoaded', function() {
+  // Hide main content initially
+  document.body.style.overflow = 'hidden';
+  
+  // Create premium welcome overlay
+  const welcomeOverlay = document.createElement('div');
+  welcomeOverlay.className = 'welcome-overlay';
+  
+  welcomeOverlay.innerHTML = `
+    <div class="background-particles" id="backgroundParticles"></div>
+    <div class="welcome-container">
+      <div class="welcome-card">
+        <div class="floating-jewels-premium">
+          <div class="jewel-premium">💎</div>
+          <div class="jewel-premium">✨</div>
+          <div class="jewel-premium">🔶</div>
+          <div class="jewel-premium">💍</div>
+          <div class="jewel-premium">🌟</div>
+          <div class="jewel-premium">💫</div>
+        </div>
+        
+        <div class="welcome-logo">✨ Shimmer & Shine</div>
+        <div class="welcome-tagline">Timeless Elegance</div>
+        
+        <div class="diamond-showcase">
+          <div class="diamond-3d"></div>
+        </div>
+        
+        <div class="welcome-message">
+          Step into a world where every piece tells a story of craftsmanship, 
+          luxury, and timeless beauty. Discover jewellery that celebrates 
+          your most precious moments.
+        </div>
+        
+        <button class="enter-btn">
+          <i class="fas fa-gem btn-icon"></i>
+          Enter the Boutique
+        </button>
+        
+        <div class="loading-bar-container">
+          <div class="loading-bar"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(welcomeOverlay);
+  
+  // Create background particles
+  createParticles();
+
+  // Handle enter button click
+  const enterBtn = welcomeOverlay.querySelector('.enter-btn');
+  enterBtn.addEventListener('click', function() {
+    enterBoutique(welcomeOverlay, enterBtn);
+  });
+
+  // Add keyboard support (Enter key)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.contains(welcomeOverlay)) {
+      enterBoutique(welcomeOverlay, enterBtn);
+    }
+  });
+});
+
+function enterBoutique(welcomeOverlay, enterBtn) {
+  // Add loading state to button
+  const originalText = enterBtn.innerHTML;
+  enterBtn.innerHTML = '<i class="fas fa-spinner fa-spin btn-icon"></i> Preparing Your Experience...';
+  enterBtn.disabled = true;
+  
+  // Add exiting animation
+  welcomeOverlay.classList.add('exiting');
+  
+  // Play subtle sound effect (optional)
+  playClickSound();
+  
+  setTimeout(() => {
+    // Remove overlay
+    welcomeOverlay.remove();
+    
+    // Show main content
+    document.body.classList.add('loaded');
+    document.body.style.overflow = 'auto';
+    
+    // Animate in main content elements with beautiful delays
+    animateMainContent();
+    
+  }, 1000);
+}
+
+function createParticles() {
+  const particlesContainer = document.getElementById('backgroundParticles');
+  if (!particlesContainer) return;
+  
+  for (let i = 0; i < 20; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 6 + 's';
+    particle.style.background = `hsl(${Math.random() * 20 + 40}, 70%, 60%)`;
+    particle.style.width = Math.random() * 4 + 2 + 'px';
+    particle.style.height = particle.style.width;
+    particlesContainer.appendChild(particle);
+  }
+}
+
+function animateMainContent() {
+  const elements = [
+    { selector: '.navbar', delay: 300 },
+    { selector: '.marquee-container', delay: 500 },
+    { selector: '.hero', delay: 700 },
+    { selector: '.collections', delay: 900 },
+    { selector: '.main-content', delay: 0 }
+  ];
+  
+  elements.forEach(({ selector, delay }) => {
+    const element = document.querySelector(selector);
+    if (element) {
+      setTimeout(() => {
+        element.classList.add('visible');
+      }, delay);
+    }
+  });
+}
+
+function playClickSound() {
+  // Create a subtle click sound using Web Audio API
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.1);
+    
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.1);
+  } catch (e) {
+    // Fallback if Web Audio API is not supported
+    console.log('Audio context not supported');
+  }
+}
+
+// Enhanced floating elements for hero section
+function createFloatingElements() {
+  const floatingContainer = document.getElementById('floatingElements');
+  if (!floatingContainer) return;
+
+  const jewels = ['💎', '✨', '🔶', '💍', '🌟', '💫', '⭐', '🔸'];
+  
+  for (let i = 0; i < 8; i++) {
+    const jewel = document.createElement('div');
+    jewel.className = 'floating-element';
+    jewel.textContent = jewels[i];
+    jewel.style.left = Math.random() * 100 + '%';
+    jewel.style.top = Math.random() * 100 + '%';
+    jewel.style.animationDelay = Math.random() * 2 + 's';
+    jewel.style.fontSize = (Math.random() * 1 + 1.5) + 'rem';
+    floatingContainer.appendChild(jewel);
+  }
+}
+
+// Initialize when page loads
+window.addEventListener('load', function() {
+  createFloatingElements();
+});correct it
