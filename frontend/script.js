@@ -74,7 +74,7 @@ function initializePremiumAnimation() {
   });
 
   // Auto-enter countdown (increased to 5 seconds)
-  let countdown = 5;
+  let countdown = 15;
   const countdownEl = document.getElementById('countdown');
   const countdownInterval = setInterval(() => {
     countdown--;
@@ -479,3 +479,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log('All JavaScript initialized successfully');
 });
+
