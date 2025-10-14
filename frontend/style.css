@@ -95,7 +95,7 @@ body {
 
 /* Marquee container - FIXED */
 .marquee-container {
-  margin-top: 80px; /* Adjusted for fixed navbar */
+  margin-top: 80px;
   overflow: hidden;
   white-space: nowrap;
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
@@ -110,7 +110,7 @@ body {
 .marquee {
   display: inline-block;
   padding-left: 100%;
-  animation: marquee 20s linear infinite;
+  animation: marquee 25s linear infinite;
   font-size: 1.1rem;
   white-space: nowrap;
 }
@@ -135,28 +135,52 @@ body {
   text-align: center;
   color: white;
   padding: 0 20px;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Enhanced Floating Elements */
 .floating-elements {
   position: absolute;
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 1;
 }
 
 .floating-element {
   position: absolute;
-  font-size: 2rem;
-  opacity: 0.7;
-  animation: float 6s ease-in-out infinite;
+  font-size: 1.5rem;
+  opacity: 0;
+  animation: floatElement 8s ease-in-out infinite;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  will-change: transform, opacity;
 }
 
-@keyframes float {
+.floating-element:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 9s; }
+.floating-element:nth-child(2) { left: 20%; animation-delay: 1s; animation-duration: 10s; }
+.floating-element:nth-child(3) { left: 30%; animation-delay: 2s; animation-duration: 11s; }
+.floating-element:nth-child(4) { left: 40%; animation-delay: 3s; animation-duration: 12s; }
+.floating-element:nth-child(5) { left: 50%; animation-delay: 4s; animation-duration: 13s; }
+.floating-element:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 14s; }
+.floating-element:nth-child(7) { left: 70%; animation-delay: 6s; animation-duration: 15s; }
+.floating-element:nth-child(8) { left: 80%; animation-delay: 7s; animation-duration: 16s; }
+.floating-element:nth-child(9) { left: 90%; animation-delay: 8s; animation-duration: 17s; }
+
+@keyframes floatElement {
   0%, 100% {
-    transform: translateY(0px) rotate(0deg);
+    transform: translateY(100vh) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
   }
   50% {
-    transform: translateY(-20px) rotate(180deg);
+    transform: translateY(30vh) rotate(180deg) scale(1.2);
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.6;
   }
 }
 
@@ -167,7 +191,10 @@ body {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
   opacity: 0;
   transform: translateY(30px);
-  animation: fadeUp 1s forwards 0.3s;
+  animation: fadeUp 1.5s forwards 0.5s;
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
 }
 
 .hero-content h1 {
@@ -175,7 +202,8 @@ body {
   font-weight: 600;
   opacity: 0;
   transform: translateY(30px);
-  animation: fadeUp 1s forwards 0.5s;
+  animation: fadeUp 1.5s forwards 1s;
+  margin-bottom: 20px;
 }
 
 .hero-content p {
@@ -183,13 +211,15 @@ body {
   margin: 15px 0;
   opacity: 0;
   transform: translateY(30px);
-  animation: fadeUp 1s forwards 0.7s;
+  animation: fadeUp 1.5s forwards 1.5s;
+  line-height: 1.6;
 }
 
 .hero-content .btn {
   opacity: 0;
   transform: translateY(30px);
-  animation: fadeUp 1s forwards 0.9s;
+  animation: fadeUp 1.5s forwards 2s;
+  margin-top: 20px;
 }
 
 @keyframes fadeUp {
@@ -300,11 +330,19 @@ body {
   opacity: 0;
   transition: var(--transition);
   position: relative;
+  animation: cardReveal 1s ease forwards;
+  animation-play-state: paused;
 }
 
 .card.visible {
-  transform: translateY(0);
-  opacity: 1;
+  animation-play-state: running;
+}
+
+@keyframes cardReveal {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .card-badge {
@@ -325,7 +363,7 @@ body {
   width: 100%;
   height: 300px;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.8s ease;
 }
 
 .card:hover img {
@@ -612,13 +650,7 @@ footer {
   color: white;
 }
 
-/* ===== SIMPLIFIED PREMIUM ANIMATION ===== */
-body {
-  opacity: 1;
-  overflow: auto;
-  background: var(--light);
-}
-
+/* ===== OPTIMIZED PREMIUM ANIMATION ===== */
 .welcome-overlay {
   position: fixed;
   top: 0;
@@ -630,48 +662,65 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .welcome-container {
   text-align: center;
   color: white;
+  max-width: 500px;
+  width: 90%;
 }
 
 .welcome-card {
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 2rem;
-  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  padding: 3rem 2rem;
+  border-radius: 25px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  max-width: 400px;
-  margin: 0 1rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
 .welcome-logo {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fff 0%, #f5c542 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: logoPulse 3s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 .welcome-tagline {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   margin-bottom: 2rem;
   opacity: 0.9;
+  font-weight: 300;
+  letter-spacing: 1px;
 }
 
 .simple-diamond {
   margin: 2rem 0;
+  position: relative;
 }
 
 .diamond-shape {
   width: 80px;
   height: 80px;
-  background: white;
+  background: linear-gradient(135deg, #fff 0%, #f5c542 100%);
   margin: 0 auto;
   transform: rotate(45deg);
   position: relative;
-  animation: sparkle 2s ease-in-out infinite;
+  animation: diamondRotate 4s ease-in-out infinite;
+  box-shadow: 0 0 30px rgba(245, 197, 66, 0.5);
 }
 
 .diamond-shape:after {
@@ -679,80 +728,93 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.3) 100%);
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.4) 100%);
 }
 
-@keyframes sparkle {
-  0%, 100% { opacity: 1; transform: rotate(45deg) scale(1); }
-  50% { opacity: 0.8; transform: rotate(45deg) scale(1.05); }
+@keyframes diamondRotate {
+  0%, 100% { transform: rotate(45deg) scale(1); }
+  50% { transform: rotate(225deg) scale(1.1); }
 }
 
 .welcome-message {
   margin: 2rem 0;
-  line-height: 1.5;
+  line-height: 1.6;
   opacity: 0.9;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 300;
 }
 
 .enter-btn {
-  background: white;
+  background: linear-gradient(135deg, #fff 0%, #f5c542 100%);
   color: #667eea;
   border: none;
-  padding: 12px 30px;
-  border-radius: 25px;
-  font-size: 1rem;
+  padding: 15px 40px;
+  border-radius: 30px;
+  font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: transform 0.3s ease;
-  margin-bottom: 1rem;
+  transition: all 0.4s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
 .enter-btn:hover {
-  transform: scale(1.05);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.enter-btn:active {
+  transform: translateY(-1px) scale(1.02);
 }
 
 .skip-text {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   opacity: 0.7;
+  margin-top: 1rem;
 }
 
 .welcome-overlay.exiting {
   opacity: 0;
-  transition: opacity 0.6s ease;
+  transform: scale(1.1);
+  transition: all 0.8s ease;
 }
 
 /* Store Location Section */
 .store-map {
   text-align: center;
   background: #fffaf3;
-  padding: 60px 20px;
+  padding: 80px 20px;
   border-top: 3px solid var(--primary);
 }
 
 .store-map h2 {
   font-size: clamp(1.8rem, 5vw, 2.5rem);
   color: var(--primary);
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .store-map p {
   color: #555;
-  margin-bottom: 25px;
-  font-size: 1rem;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .map-container {
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  border-radius: 15px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.5s ease;
 }
 
 .map-container:hover {
-  transform: scale(1.01);
+  transform: translateY(-5px);
 }
 
 /* Responsive Design */
@@ -776,7 +838,7 @@ body {
   }
   
   .hero-content h1 {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
   }
   
   .collections {
@@ -784,7 +846,11 @@ body {
   }
   
   .section-title {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
+  }
+  
+  .floating-element {
+    font-size: 1.3rem;
   }
 }
 
@@ -798,50 +864,51 @@ body {
   .nav-links {
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
   }
   
   .hero {
-    height: 70vh;
+    height: 80vh;
   }
   
   .hero-content {
     padding: 30px 20px;
+    margin: 20px;
   }
   
   .hero-content h1 {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
   
   .hero-content p {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
   .collections {
-    padding: 50px 20px;
+    padding: 60px 20px;
   }
   
   .section-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
   
   .collection-filters {
-    gap: 10px;
+    gap: 8px;
   }
   
   .filter-btn {
-    padding: 10px 20px;
+    padding: 10px 18px;
     font-size: 0.9rem;
   }
   
   .collection-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
   }
   
   .footer-content {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 30px;
     text-align: center;
   }
   
@@ -851,12 +918,11 @@ body {
   }
   
   .welcome-card {
-    padding: 1.5rem;
-    margin: 0 0.5rem;
+    padding: 2rem 1.5rem;
   }
   
   .welcome-logo {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
   
   .diamond-shape {
@@ -865,17 +931,27 @@ body {
   }
   
   .marquee-container {
-    margin-top: 120px; /* More space for mobile navbar */
+    margin-top: 120px;
+  }
+  
+  .marquee {
+    font-size: 1rem;
+    animation-duration: 20s;
+  }
+  
+  /* Reduce floating elements on mobile */
+  .floating-element:nth-child(n+6) {
+    display: none;
   }
 }
 
 @media (max-width: 480px) {
   .logo {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
   
   .hero-content h1 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
   
   .section-title {
@@ -887,10 +963,39 @@ body {
   }
   
   .card-info {
-    padding: 20px;
+    padding: 15px;
   }
   
   .marquee {
-    font-size: 1rem; /* Smaller font for mobile */
+    font-size: 0.9rem;
   }
+  
+  .welcome-logo {
+    font-size: 1.8rem;
+  }
+  
+  .welcome-tagline {
+    font-size: 1.1rem;
+  }
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Hardware acceleration for smooth animations */
+.card,
+.floating-element,
+.diamond-shape,
+.enter-btn {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
 }
