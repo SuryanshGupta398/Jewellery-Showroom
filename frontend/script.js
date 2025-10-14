@@ -481,4 +481,5 @@ function createFloatingElements() {
 // Initialize when page loads
 window.addEventListener('load', function() {
   createFloatingElements();
-});correct it
+});
+
