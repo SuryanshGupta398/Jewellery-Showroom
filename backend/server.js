@@ -7,7 +7,7 @@ const app = express();
 // ===== MIDDLEWARE =====
 app.use(cors({
   origin: [
-    "https://jewellery-showroom-4svb.vercel.app/",
+    "https://jewellery-showroom-4svb.vercel.app",
     "http://localhost:3000",       // for Live Server
     "http://127.0.0.1:5500",       // fallback
   ],
