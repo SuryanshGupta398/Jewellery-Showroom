@@ -177,6 +177,13 @@ class RoyalAnimation {
 
     initializePageAnimations() {
         // Initialize card animations
+        this.initializeCardAnimations();
+        
+        // Initialize floating elements
+        this.initializeFloatingElements();
+    }
+
+    initializeCardAnimations() {
         const cards = document.querySelectorAll('.card');
         const revealCards = () => {
             const triggerBottom = window.innerHeight * 0.85;
@@ -201,67 +208,104 @@ class RoyalAnimation {
 
         // Initial reveal
         revealCards();
-        
-        // Initialize floating elements
-        this.initializeFloatingElements();
+    }
+}
+
+// ===== FLOATING ELEMENTS MANAGER =====
+class FloatingElementsManager {
+    constructor() {
+        this.isMobile = window.innerWidth <= 768;
+        this.floatingElements = [];
+        this.init();
     }
 
-    initializeFloatingElements() {
+    init() {
+        // Only initialize on homepage
+        if (this.isHomePage()) {
+            this.createFloatingElements();
+            this.setupResizeHandler();
+        }
+    }
+
+    isHomePage() {
+        return document.querySelector('.hero') !== null && 
+               !window.location.pathname.includes('login.html') &&
+               !window.location.pathname.includes('register.html');
+    }
+
+    createFloatingElements() {
         const heroSection = document.querySelector('.hero');
-        if (!heroSection || document.getElementById('floatingElements')) return;
-        
+        if (!heroSection) return;
+
+        // Remove existing floating elements
+        this.destroy();
+
         const floatingContainer = document.createElement('div');
         floatingContainer.className = 'floating-elements';
         floatingContainer.id = 'floatingElements';
         
         const jewels = ['💎', '✨', '🔶', '💍', '🌟', '💫', '⭐', '🔸', '💠'];
         
-        // Create floating elements (limited on mobile)
-        const elementCount = this.isMobile ? 5 : 9;
+        // Limit elements for mobile performance
+        const elementCount = this.isMobile ? 6 : 9;
         
         for (let i = 0; i < elementCount; i++) {
-            const element = document.createElement('div');
-            element.className = 'floating-element';
-            element.textContent = jewels[i];
-            element.style.left = `${(i + 1) * (100 / (elementCount + 1))}%`;
-            element.style.animationDelay = `${i * 0.5}s`;
-            element.style.fontSize = `${1 + Math.random() * 1}rem`;
+            const element = this.createFloatingElement(jewels[i], i, elementCount);
             floatingContainer.appendChild(element);
+            this.floatingElements.push(element);
         }
         
         heroSection.appendChild(floatingContainer);
+        
+        console.log(`🎈 Created ${elementCount} floating elements`);
     }
-}
 
-// ===== DYNAMIC FLOATING ELEMENTS =====
-function initializeFloatingElements() {
-    const heroSection = document.querySelector('.hero');
-    if (!heroSection) return;
-    
-    const floatingContainer = document.createElement('div');
-    floatingContainer.className = 'floating-elements';
-    floatingContainer.id = 'floatingElements';
-    
-    const jewels = ['💎', '✨', '🔶', '💍', '🌟', '💫', '⭐', '🔸', '💠'];
-    
-    // Check if mobile
-    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const elementCount = isMobile ? 5 : 9;
-    
-    // Create floating elements
-    for (let i = 0; i < elementCount; i++) {
+    createFloatingElement(jewel, index, totalCount) {
         const element = document.createElement('div');
         element.className = 'floating-element';
-        element.textContent = jewels[i];
-        element.style.left = `${(i + 1) * (100 / (elementCount + 1))}%`;
-        element.style.animationDelay = `${i * 0.5}s`;
-        element.style.fontSize = `${1 + Math.random() * 1}rem`;
-        floatingContainer.appendChild(element);
+        element.textContent = jewel;
+        
+        // Calculate position for even distribution
+        const position = ((index + 1) * (100 / (totalCount + 1)));
+        
+        // Randomize properties for natural look
+        const delay = index * 0.7;
+        const duration = 8 + Math.random() * 4;
+        const size = 1.2 + Math.random() * 0.8;
+        
+        element.style.left = `${position}%`;
+        element.style.animationDelay = `${delay}s`;
+        element.style.animationDuration = `${duration}s`;
+        element.style.fontSize = `${size}rem`;
+        element.style.opacity = '0.8';
+        
+        // Add slight rotation for variety
+        element.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+        return element;
     }
-    
-    heroSection.appendChild(floatingContainer);
-    
-    console.log('Floating elements initialized');
+
+    setupResizeHandler() {
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const newIsMobile = window.innerWidth <= 768;
+                if (newIsMobile !== this.isMobile) {
+                    this.isMobile = newIsMobile;
+                    this.createFloatingElements();
+                }
+            }, 250);
+        });
+    }
+
+    destroy() {
+        const existingContainer = document.getElementById('floatingElements');
+        if (existingContainer) {
+            existingContainer.remove();
+        }
+        this.floatingElements = [];
+    }
 }
 
 // ===== MAIN APP CODE =====
@@ -270,6 +314,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Initialize Royal Animation
     new RoyalAnimation();
+
+    // Initialize Floating Elements Manager
+    const floatingManager = new FloatingElementsManager();
 
     // ===== REGISTER FORM =====
     const registerForm = document.getElementById("registerForm");
@@ -591,31 +638,51 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ===== RESIZE HANDLER FOR RESPONSIVE ELEMENTS =====
-    window.addEventListener('resize', () => {
-        // Reinitialize floating elements on resize for better responsiveness
-        const existingFloating = document.getElementById('floatingElements');
-        if (existingFloating) {
-            existingFloating.remove();
-        }
-        initializeFloatingElements();
-    });
-
     console.log('👑 Royal Jewellery App Initialized Successfully');
 });
 
-// ===== GLOBAL ERROR HANDLER =====
-window.addEventListener('error', (e) => {
-    console.error('Global error:', e.error);
-});
+// ===== ENHANCED FLOATING ELEMENTS CSS (Add this to your CSS) =====
+/*
+.floating-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
 
-// ===== LOADING STATE HANDLER =====
-window.addEventListener('load', () => {
-    console.log('Page fully loaded');
-    // Additional initialization after everything is loaded
-});
+.floating-element {
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0;
+    animation: floatElement 8s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    will-change: transform, opacity;
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+}
 
-// ===== BEFORE UNLOAD HANDLER =====
-window.addEventListener('beforeunload', () => {
-    // Cleanup if needed
-});
+@keyframes floatElement {
+    0%, 100% {
+        transform: translateY(100vh) rotate(0deg) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(30vh) rotate(180deg) scale(1.2);
+        opacity: 1;
+    }
+    90% {
+        opacity: 0.6;
+    }
+}
+
+/* Mobile optimizations */
+/*@media (max-width: 768px) {
+    .floating-element {
+        font-size: 1.2rem;
+        animation-duration: 6s;
+    }
+}*/
+*/
