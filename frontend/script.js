@@ -188,7 +188,7 @@ class RoyalAnimation {
     }
 
     startRoyalCountdown() {
-        let countdown = 5;
+        let countdown = 15;
         const countdownEl = document.getElementById('countdownNumber');
         const countdownInterval = setInterval(() => {
             countdown--;
@@ -823,6 +823,7 @@ document.addEventListener("DOMContentLoaded", () => {
         animation-duration: 6s;
     }
 }*/
+
 
 
 
