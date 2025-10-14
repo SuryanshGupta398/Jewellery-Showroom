@@ -1,17 +1,129 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // ===== PREMIUM ANIMATION - ONLY ON HOMEPAGE =====
+// ===== PREMIUM ANIMATION - RUNS IMMEDIATELY =====
+(function checkAndShowAnimation() {
+  // Check if we're on homepage and animation hasn't been shown
   const isHomePage = window.location.pathname.endsWith('index.html') || 
                     window.location.pathname.endsWith('/') || 
-                    document.querySelector('.hero') !== null;
+                    (document.querySelector('.hero') !== null && 
+                     !window.location.pathname.includes('login.html') &&
+                     !window.location.pathname.includes('register.html'));
+  
+  // Debug log
+  console.log('Animation check:', {
+    isHomePage,
+    pathname: window.location.pathname,
+    hasHero: document.querySelector('.hero') !== null,
+    animationShown: sessionStorage.getItem('animationShown')
+  });
   
   if (isHomePage && !sessionStorage.getItem('animationShown')) {
+    console.log('Showing animation');
     initializePremiumAnimation();
   } else {
-    // Skip animation, show content immediately
+    console.log('Skipping animation');
+    // Show content immediately
     document.body.classList.add('loaded');
     document.body.style.overflow = 'auto';
   }
+})();
 
+// ===== OPTIMIZED PREMIUM ANIMATION =====
+function initializePremiumAnimation() {
+  console.log('Initializing premium animation...');
+  
+  // Hide main content initially
+  document.body.style.overflow = 'hidden';
+  
+  // Create welcome overlay
+  const welcomeOverlay = document.createElement('div');
+  welcomeOverlay.className = 'welcome-overlay';
+  welcomeOverlay.id = 'welcomeOverlay';
+  
+  welcomeOverlay.innerHTML = `
+    <div class="welcome-container">
+      <div class="welcome-card">
+        <div class="simple-jewels">
+          <div class="jewel">💎</div>
+          <div class="jewel">✨</div>
+          <div class="jewel">💍</div>
+        </div>
+        <div class="welcome-logo">✨ Shimmer & Shine</div>
+        <div class="welcome-tagline">Timeless Elegance</div>
+        
+        <div class="simple-diamond">
+          <div class="diamond-shape"></div>
+        </div>
+        
+        <div class="welcome-message">
+          Discover jewellery that celebrates your most precious moments.
+        </div>
+        
+        <button class="enter-btn" id="enterBtn">
+          <i class="fas fa-gem btn-icon"></i>
+          Enter Boutique
+        </button>
+        
+        <div class="skip-text">Automatically entering in <span id="countdown">3</span>s</div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(welcomeOverlay);
+  
+  // Handle enter button click
+  const enterBtn = document.getElementById('enterBtn');
+  enterBtn.addEventListener('click', function() {
+    console.log('Enter button clicked');
+    enterBoutique();
+  });
+
+  // Auto-enter countdown
+  let countdown = 3;
+  const countdownEl = document.getElementById('countdown');
+  const countdownInterval = setInterval(() => {
+    countdown--;
+    if (countdownEl) countdownEl.textContent = countdown;
+    
+    if (countdown <= 0) {
+      clearInterval(countdownInterval);
+      if (document.getElementById('welcomeOverlay')) {
+        enterBoutique();
+      }
+    }
+  }, 1000);
+}
+
+function enterBoutique() {
+  console.log('Entering boutique...');
+  
+  // Mark animation as shown for this session
+  sessionStorage.setItem('animationShown', 'true');
+  
+  const welcomeOverlay = document.getElementById('welcomeOverlay');
+  if (welcomeOverlay) {
+    // Add exiting animation
+    welcomeOverlay.classList.add('exiting');
+    
+    setTimeout(() => {
+      // Remove overlay
+      welcomeOverlay.remove();
+      
+      // Show main content
+      document.body.classList.add('loaded');
+      document.body.style.overflow = 'auto';
+      
+      console.log('Animation completed, main content shown');
+    }, 600);
+  } else {
+    // Fallback if overlay doesn't exist
+    document.body.classList.add('loaded');
+    document.body.style.overflow = 'auto';
+  }
+}
+
+// ===== MAIN APP CODE =====
+document.addEventListener("DOMContentLoaded", () => {
+  console.log('DOMContentLoaded - Main app code running');
+  
   // ===== REGISTER FORM =====
   const registerForm = document.getElementById("registerForm");
   if (registerForm) {
@@ -252,6 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
       logoutBtn.onclick = e => {
         e.preventDefault();
         localStorage.clear();
+        sessionStorage.clear(); // Clear session storage on logout
         window.location.reload();
       };
       navLinks.appendChild(logoutBtn);
@@ -267,7 +380,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   window.addEventListener("scroll", revealCards);
-  window.addEventListener("load", revealCards);
+  
+  // Only run revealCards on load if animation isn't showing
+  if (!document.getElementById('welcomeOverlay')) {
+    window.addEventListener("load", revealCards);
+  }
 
   // ===== NAVBAR SCROLL EFFECT =====
   const navbar = document.querySelector(".navbar");
@@ -314,193 +431,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
-// ===== OPTIMIZED PREMIUM ANIMATION (Mobile-Friendly) =====
-function initializePremiumAnimation() {
-  // Hide main content initially
-  document.body.style.overflow = 'hidden';
-  
-  // Create lightweight welcome overlay
-  const welcomeOverlay = document.createElement('div');
-  welcomeOverlay.className = 'welcome-overlay';
-  
-  welcomeOverlay.innerHTML = `
-    <div class="welcome-container">
-      <div class="welcome-card">
-        <div class="welcome-logo">✨ Shimmer & Shine</div>
-        <div class="welcome-tagline">Timeless Elegance</div>
-        
-        <div class="simple-diamond">
-          <div class="diamond-shape"></div>
-        </div>
-        
-        <div class="welcome-message">
-          Discover jewellery that celebrates your most precious moments.
-        </div>
-        
-        <button class="enter-btn">
-          <i class="fas fa-gem btn-icon"></i>
-          Enter Boutique
-        </button>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(welcomeOverlay);
-  
-  // Handle enter button click
-  const enterBtn = welcomeOverlay.querySelector('.enter-btn');
-  enterBtn.addEventListener('click', function() {
-    enterBoutique(welcomeOverlay, enterBtn);
-  });
-
-  // Auto-enter after 3 seconds (mobile-friendly)
-  setTimeout(() => {
-    if (document.contains(welcomeOverlay)) {
-      enterBoutique(welcomeOverlay, enterBtn);
-    }
-  }, 3000);
-}
-
-function enterBoutique(welcomeOverlay, enterBtn) {
-  // Mark animation as shown for this session
-  sessionStorage.setItem('animationShown', 'true');
-  
-  // Add exiting animation
-  welcomeOverlay.classList.add('exiting');
-  
-  setTimeout(() => {
-    // Remove overlay
-    welcomeOverlay.remove();
-    
-    // Show main content
-    document.body.classList.add('loaded');
-    document.body.style.overflow = 'auto';
-    
-  }, 500);
-}
-
-// Add this CSS to your stylesheet for the optimized animation:
-/*
-.welcome-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  font-family: 'Arial', sans-serif;
-}
-
-.welcome-container {
-  text-align: center;
-  color: white;
-}
-
-.welcome-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 2rem;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  max-width: 400px;
-  margin: 0 1rem;
-}
-
-.welcome-logo {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.welcome-tagline {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  opacity: 0.9;
-}
-
-.simple-diamond {
-  margin: 2rem 0;
-}
-
-.diamond-shape {
-  width: 80px;
-  height: 80px;
-  background: white;
-  margin: 0 auto;
-  transform: rotate(45deg);
-  position: relative;
-}
-
-.diamond-shape:after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.3) 100%);
-}
-
-.welcome-message {
-  margin: 2rem 0;
-  line-height: 1.5;
-  opacity: 0.9;
-}
-
-.enter-btn {
-  background: white;
-  color: #667eea;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.enter-btn:hover {
-  transform: scale(1.05);
-}
-
-.welcome-overlay.exiting {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.loaded .navbar,
-.loaded .marquee-container,
-.loaded .hero,
-.loaded .collections {
-  opacity: 1;
-  transform: translateY(0);
-  transition: all 0.6s ease;
-}
-
-.navbar,
-.marquee-container,
-.hero,
-.collections {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-@media (max-width: 768px) {
-  .welcome-card {
-    padding: 1.5rem;
-    margin: 0 0.5rem;
-  }
-  
-  .welcome-logo {
-    font-size: 1.5rem;
-  }
-  
-  .diamond-shape {
-    width: 60px;
-    height: 60px;
-  }
-}
-*/
