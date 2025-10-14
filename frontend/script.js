@@ -39,26 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Server error. Try again later.");
     }
   });
-      try {
-        const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, address, phone })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          alert(data.message || "Registration successful!");
-          registerForm.reset();
-          window.location.href = "login.html";
-        } else {
-          alert(data.message || "Something went wrong!");
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Server error. Try again later.");
-      }
-    });
-  }
+}
 
 
   // ===== LOGIN FORM WITH OTP =====
@@ -566,4 +547,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
+
 
