@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   sendOtpBtn.addEventListener("click", async () => {
     const phone = document.getElementById("loginPhone").value.trim();
-=======
   if (sendOtpBtn) {
     sendOtpBtn.addEventListener("click", async () => {
       const phone = document.getElementById("loginPhone").value.trim();
@@ -164,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.reload();
     } else {
       alert("Invalid OTP. Try again.");
-=======
+
     const productId = card.dataset.productId || card.querySelector("h3").textContent;
     const name = card.querySelector("h3").innerText;
     const price = parseInt(card.querySelector(".price").innerText.replace(/[₹,]/g, ""));
@@ -546,6 +545,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
+
 
 
 
