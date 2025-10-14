@@ -7,7 +7,6 @@
                      !window.location.pathname.includes('login.html') &&
                      !window.location.pathname.includes('register.html'));
   
-  // Debug log
   console.log('Animation check:', {
     isHomePage,
     pathname: window.location.pathname,
@@ -23,6 +22,7 @@
     // Show content immediately
     document.body.classList.add('loaded');
     document.body.style.overflow = 'auto';
+    initializeFloatingElements();
   }
 })();
 
@@ -41,11 +41,6 @@ function initializePremiumAnimation() {
   welcomeOverlay.innerHTML = `
     <div class="welcome-container">
       <div class="welcome-card">
-        <div class="simple-jewels">
-          <div class="jewel">💎</div>
-          <div class="jewel">✨</div>
-          <div class="jewel">💍</div>
-        </div>
         <div class="welcome-logo">✨ Shimmer & Shine</div>
         <div class="welcome-tagline">Timeless Elegance</div>
         
@@ -54,7 +49,9 @@ function initializePremiumAnimation() {
         </div>
         
         <div class="welcome-message">
-          Discover jewellery that celebrates your most precious moments.
+          Step into a world where every piece tells a story of craftsmanship, 
+          luxury, and timeless beauty. Discover jewellery that celebrates 
+          your most precious moments.
         </div>
         
         <button class="enter-btn" id="enterBtn">
@@ -62,7 +59,7 @@ function initializePremiumAnimation() {
           Enter Boutique
         </button>
         
-        <div class="skip-text">Automatically entering in <span id="countdown">3</span>s</div>
+        <div class="skip-text">Automatically entering in <span id="countdown">5</span>s</div>
       </div>
     </div>
   `;
@@ -76,8 +73,8 @@ function initializePremiumAnimation() {
     enterBoutique();
   });
 
-  // Auto-enter countdown
-  let countdown = 3;
+  // Auto-enter countdown (increased to 5 seconds)
+  let countdown = 5;
   const countdownEl = document.getElementById('countdown');
   const countdownInterval = setInterval(() => {
     countdown--;
@@ -111,19 +108,55 @@ function enterBoutique() {
       document.body.classList.add('loaded');
       document.body.style.overflow = 'auto';
       
+      // Initialize floating elements after animation
+      initializeFloatingElements();
+      
       console.log('Animation completed, main content shown');
-    }, 600);
+    }, 800);
   } else {
     // Fallback if overlay doesn't exist
     document.body.classList.add('loaded');
     document.body.style.overflow = 'auto';
+    initializeFloatingElements();
   }
+}
+
+// ===== DYNAMIC FLOATING ELEMENTS =====
+function initializeFloatingElements() {
+  const heroSection = document.querySelector('.hero');
+  if (!heroSection) return;
+  
+  const floatingContainer = document.createElement('div');
+  floatingContainer.className = 'floating-elements';
+  floatingContainer.id = 'floatingElements';
+  
+  const jewels = ['💎', '✨', '🔶', '💍', '🌟', '💫', '⭐', '🔸', '💠'];
+  
+  // Create floating elements
+  jewels.forEach((jewel, index) => {
+    const element = document.createElement('div');
+    element.className = 'floating-element';
+    element.textContent = jewel;
+    element.style.left = `${(index + 1) * 10}%`;
+    element.style.animationDelay = `${index * 0.5}s`;
+    element.style.fontSize = `${1 + Math.random() * 1}rem`;
+    floatingContainer.appendChild(element);
+  });
+  
+  heroSection.appendChild(floatingContainer);
+  
+  console.log('Floating elements initialized');
 }
 
 // ===== MAIN APP CODE =====
 document.addEventListener("DOMContentLoaded", () => {
   console.log('DOMContentLoaded - Main app code running');
   
+  // Initialize floating elements if animation was skipped
+  if (!document.getElementById('welcomeOverlay')) {
+    initializeFloatingElements();
+  }
+
   // ===== REGISTER FORM =====
   const registerForm = document.getElementById("registerForm");
   if (registerForm) {
@@ -364,7 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
       logoutBtn.onclick = e => {
         e.preventDefault();
         localStorage.clear();
-        sessionStorage.clear(); // Clear session storage on logout
+        sessionStorage.clear();
         window.location.reload();
       };
       navLinks.appendChild(logoutBtn);
@@ -376,15 +409,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function revealCards() {
     const triggerBottom = window.innerHeight * 0.85;
     cards.forEach(card => {
-      if (card.getBoundingClientRect().top < triggerBottom) card.classList.add("visible");
+      const cardTop = card.getBoundingClientRect().top;
+      if (cardTop < triggerBottom) {
+        card.classList.add("visible");
+      }
     });
   }
+
+  // Initialize card animations
   window.addEventListener("scroll", revealCards);
-  
-  // Only run revealCards on load if animation isn't showing
-  if (!document.getElementById('welcomeOverlay')) {
-    window.addEventListener("load", revealCards);
-  }
+  window.addEventListener("load", revealCards);
 
   // ===== NAVBAR SCROLL EFFECT =====
   const navbar = document.querySelector(".navbar");
@@ -416,18 +450,32 @@ document.addEventListener("DOMContentLoaded", () => {
       cards.forEach(card => {
         if (category === "all" || card.dataset.category === category) {
           card.style.display = "block";
-          card.classList.add("visible");
+          setTimeout(() => card.classList.add("visible"), 50);
         } else {
           card.style.display = "none";
           card.classList.remove("visible");
         }
       });
 
-      // Optional: smooth scroll to collections section
+      // Smooth scroll to collections section
       const collectionsSection = document.querySelector("#collections");
       if (collectionsSection) {
         collectionsSection.scrollIntoView({ behavior: "smooth" });
       }
     });
   });
+
+  // ===== PERFORMANCE OPTIMIZATIONS =====
+  // Throttle scroll events for better performance
+  let scrollTimeout;
+  window.addEventListener('scroll', () => {
+    if (!scrollTimeout) {
+      scrollTimeout = setTimeout(() => {
+        revealCards();
+        scrollTimeout = null;
+      }, 100);
+    }
+  });
+
+  console.log('All JavaScript initialized successfully');
 });
