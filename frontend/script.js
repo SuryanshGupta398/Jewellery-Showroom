@@ -67,8 +67,8 @@ class RoyalAnimation {
             <div class="royal-welcome-container">
                 <div class="royal-welcome-card">
                     <div class="royal-crown">👑</div>
-                    <div class="royal-logo">Shimmer & Shine</div>
-                    <div class="royal-tagline">Royal Jewellery Boutique</div>
+                    <div class="royal-logo">Prabhanjan Mragendra Jewellers PVT LTD</div>
+                    <div class="royal-tagline">Prabhanjan Jewellers</div>
                     
                     <div class="royal-diamond-showcase">
                         <div class="royal-diamond"></div>
@@ -823,6 +823,7 @@ document.addEventListener("DOMContentLoaded", () => {
         animation-duration: 6s;
     }
 }*/
+
 
 
 
