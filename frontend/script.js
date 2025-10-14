@@ -188,7 +188,7 @@ class RoyalAnimation {
     }
 
     startRoyalCountdown() {
-        let countdown = 15;
+        let countdown = 5;
         const countdownEl = document.getElementById('countdownNumber');
         const countdownInterval = setInterval(() => {
             countdown--;
@@ -321,11 +321,17 @@ class RoyalAnimation {
 
     initializeHomepageFloatingElements() {
         const heroSection = document.querySelector('.hero');
-        if (!heroSection || document.getElementById('floatingElements')) return;
+        if (!heroSection) return;
+
+        // Remove existing floating elements if any
+        const existingFloating = document.getElementById('homepageFloatingElements');
+        if (existingFloating) {
+            existingFloating.remove();
+        }
 
         const floatingContainer = document.createElement('div');
         floatingContainer.className = 'floating-elements';
-        floatingContainer.id = 'floatingElements';
+        floatingContainer.id = 'homepageFloatingElements';
         
         const jewels = ['💎', '✨', '🔶', '💍', '🌟', '💫', '⭐', '🔸', '💠'];
         const elementCount = this.isMobile ? 6 : 9;
@@ -336,6 +342,7 @@ class RoyalAnimation {
         }
         
         heroSection.appendChild(floatingContainer);
+        console.log('🎈 Homepage floating elements created');
     }
 
     createHomepageFloatingElement(jewel, index, totalCount) {
@@ -356,6 +363,87 @@ class RoyalAnimation {
         element.style.transform = `rotate(${Math.random() * 360}deg)`;
         
         return element;
+    }
+}
+
+// ===== FLOATING ELEMENTS MANAGER FOR HOMEPAGE =====
+class FloatingElementsManager {
+    constructor() {
+        this.isMobile = window.innerWidth <= 768;
+        this.init();
+    }
+
+    init() {
+        // Only initialize on homepage
+        if (this.isHomePage() && !document.getElementById('homepageFloatingElements')) {
+            this.createFloatingElements();
+            this.setupResizeHandler();
+        }
+    }
+
+    isHomePage() {
+        return document.querySelector('.hero') !== null && 
+               !window.location.pathname.includes('login.html') &&
+               !window.location.pathname.includes('register.html');
+    }
+
+    createFloatingElements() {
+        const heroSection = document.querySelector('.hero');
+        if (!heroSection) return;
+
+        const floatingContainer = document.createElement('div');
+        floatingContainer.className = 'floating-elements';
+        floatingContainer.id = 'homepageFloatingElements';
+        
+        const jewels = ['💎', '✨', '🔶', '💍', '🌟', '💫', '⭐', '🔸', '💠'];
+        const elementCount = this.isMobile ? 6 : 9;
+        
+        for (let i = 0; i < elementCount; i++) {
+            const element = this.createFloatingElement(jewels[i], i, elementCount);
+            floatingContainer.appendChild(element);
+        }
+        
+        heroSection.appendChild(floatingContainer);
+        console.log(`🎈 Created ${elementCount} homepage floating elements`);
+    }
+
+    createFloatingElement(jewel, index, totalCount) {
+        const element = document.createElement('div');
+        element.className = 'floating-element';
+        element.textContent = jewel;
+        
+        // Calculate position for even distribution
+        const position = ((index + 1) * (100 / (totalCount + 1)));
+        
+        // Randomize properties for natural look
+        const delay = index * 0.7;
+        const duration = 8 + Math.random() * 4;
+        const size = 1.2 + Math.random() * 0.8;
+        
+        element.style.left = `${position}%`;
+        element.style.animationDelay = `${delay}s`;
+        element.style.animationDuration = `${duration}s`;
+        element.style.fontSize = `${size}rem`;
+        element.style.opacity = '0.8';
+        
+        // Add slight rotation for variety
+        element.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+        return element;
+    }
+
+    setupResizeHandler() {
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const newIsMobile = window.innerWidth <= 768;
+                if (newIsMobile !== this.isMobile) {
+                    this.isMobile = newIsMobile;
+                    this.createFloatingElements();
+                }
+            }, 250);
+        });
     }
 }
 // ===== MAIN APP CODE =====
@@ -735,5 +823,6 @@ document.addEventListener("DOMContentLoaded", () => {
         animation-duration: 6s;
     }
 }*/
+
 
 
