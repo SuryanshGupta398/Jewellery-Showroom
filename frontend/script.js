@@ -492,52 +492,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ===== LOGIN FORM WITH OTP =====
     const sendOtpBtn = document.getElementById("sendOtpBtn");
-    const loginBtn = document.getElementById("loginBtn");
-    const otpGroup = document.querySelector(".otp-group");
-    let generatedOtp = "";
+const loginBtn = document.getElementById("loginBtn");
+const otpGroup = document.querySelector(".otp-group");
 
-    if (sendOtpBtn) {
-        sendOtpBtn.addEventListener("click", async () => {
-            const phone = document.getElementById("loginPhone").value.trim();
-            if (!/^\d{10}$/.test(phone)) return alert("Enter a valid 10-digit phone number.");
+if (sendOtpBtn) {
+    sendOtpBtn.addEventListener("click", async () => {
+        const phone = document.getElementById("loginPhone").value.trim();
+        if (!/^\d{10}$/.test(phone)) return alert("Enter a valid 10-digit phone number.");
 
-            try {
-                const res = await fetch(`https://jewellery-website-5xi0.onrender.com/api/login?phone=${encodeURIComponent(phone)}`);
-                const data = await res.json();
-                if (data.error) return alert(data.error);
-
-                // Demo OTP
-                generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-                console.log("Demo OTP:", generatedOtp);
-                alert("OTP sent! (Check console for demo)");
-
+        try {
+            const res = await fetch("https://YOUR_BACKEND_URL/api/send-otp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert("OTP sent! Check your SMS.");
                 otpGroup.style.display = "block";
                 sendOtpBtn.style.display = "none";
                 loginBtn.style.display = "block";
-
-                localStorage.setItem("userName", data.name);
-                localStorage.setItem("userPhone", data.phone);
-            } catch (err) {
-                console.error(err);
-                alert("Server error. Try again later.");
+                localStorage.setItem("userPhone", phone);
+            } else {
+                alert(data.error);
             }
-        });
-    }
+        } catch (err) {
+            console.error(err);
+            alert("Server error. Try again later.");
+        }
+    });
+}
 
-    const loginForm = document.getElementById("loginForm");
-    if (loginForm) {
-        loginForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const enteredOtp = document.getElementById("otp").value.trim();
-            if (enteredOtp === generatedOtp) {
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const phone = localStorage.getItem("userPhone");
+        const otp = document.getElementById("otp").value.trim();
+
+        try {
+            const res = await fetch("https://YOUR_BACKEND_URL/api/verify-otp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone, otp })
+            });
+            const data = await res.json();
+            if (res.ok) {
                 alert("Login successful!");
                 localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("userName", data.name);
                 window.location.href = "index.html";
             } else {
-                alert("Invalid OTP. Try again.");
+                alert(data.error);
             }
-        });
-    }
+        } catch (err) {
+            console.error(err);
+            alert("Server error. Try again later.");
+        }
+    });
+}
 
     // ===== GLOBAL VARIABLES =====
     const userPhone = localStorage.getItem("userPhone");
@@ -823,6 +836,7 @@ document.addEventListener("DOMContentLoaded", () => {
         animation-duration: 6s;
     }
 }*/
+
 
 
 
