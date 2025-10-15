@@ -501,7 +501,7 @@ if (sendOtpBtn) {
         if (!/^\d{10}$/.test(phone)) return alert("Enter a valid 10-digit phone number.");
 
         try {
-            const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/send-otp", {
+            const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/login-otp", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ phone })
@@ -531,7 +531,7 @@ if (loginForm) {
         const otp = document.getElementById("otp").value.trim();
 
         try {
-            const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/verify-otp", {
+            const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/login-verify", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ phone, otp })
@@ -836,6 +836,7 @@ if (loginForm) {
         animation-duration: 6s;
     }
 }*/
+
 
 
 
