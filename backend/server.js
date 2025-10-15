@@ -1,32 +1,39 @@
+// ===== index.js =====
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const twilio = require("twilio");
 
 const app = express();
 
 // ===== MIDDLEWARE =====
 app.use(cors({
   origin: [
-    "https://jewellery-showroom-4svb.vercel.app",
-    "http://localhost:3000",       // for Live Server
-    "http://127.0.0.1:5500",       // fallback
+    "https://jewellery-showroom-4svb.vercel.app", // Vercel frontend
+    "http://localhost:3000",
+    "http://127.0.0.1:5500"
   ],
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"]
 }));
- // allow all origins (you can restrict to your domain later)
-app.use(express.json()); // parse JSON body
+app.use(express.json());
 
-// ===== MONGODB CONNECTION =====
+// ===== ENV VARIABLES =====
 const mongoURI = process.env.MONGODB_URI;
+const TWILIO_ACCOUNT_SID = process.env.ACCOUNT_SID;
+const TWILIO_AUTH_TOKEN = process.env.AUTH_TOKEN;
+const TWILIO_NUMBER = process.env.TWILIO_PHONE_NUMBER;
 
-if (!mongoURI) {
-  console.error("❌ MONGODB_URI not set in environment variables");
+if (!mongoURI || !TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_NUMBER) {
+  console.error("❌ Environment variables missing");
   process.exit(1);
 }
 
-mongoose
-  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+// ===== TWILIO CLIENT =====
+const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+
+// ===== MONGODB CONNECTION =====
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
@@ -48,36 +55,70 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("grahak", userSchema);
 
+// ===== OTP STORE (in-memory) =====
+global.otpStore = {}; // phone: otp
+
 // ===== ROUTES =====
 
-// 🧩 Register new user
-app.post("/api/register", async (req, res) => {
+// 🧾 Send OTP for login
+app.post("/api/login-otp", async (req, res) => {
   try {
-    const { name, phone, address } = req.body;
+    const { phone } = req.body;
+    if (!phone) return res.status(400).json({ message: "Phone is required" });
 
-    console.log("Register request body:", req.body);
+    const user = await User.findOne({ phone });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (!name || !phone || !address) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000);
 
-    const existingUser = await User.findOne({ phone });
-    if (existingUser) {
-      return res.status(400).json({ message: "Phone already registered" });
-    }
+    // Send OTP via Twilio
+    await client.messages.create({
+      body: `Your login OTP is ${otp}`,
+      from: TWILIO_NUMBER,
+      to: phone
+    });
 
-    const newUser = new User({ name, phone, address });
-    const savedUser = await newUser.save();
+    // Store OTP in memory
+    global.otpStore[phone] = otp;
 
-    console.log("Saved user:", savedUser);
-    res.status(201).json({ message: "User registered successfully!" });
+    res.status(200).json({ message: "OTP sent successfully!" });
   } catch (err) {
-    console.error("❌ Registration error:", err);
+    console.error("❌ Send login OTP error:", err);
+    res.status(500).json({ message: "Failed to send OTP", error: err.message });
+  }
+});
+
+// ✅ Verify login OTP
+app.post("/api/login-verify", async (req, res) => {
+  try {
+    const { phone, otp } = req.body;
+    if (!phone || !otp) return res.status(400).json({ message: "Phone and OTP are required" });
+
+    const validOtp = global.otpStore[phone];
+    if (!validOtp) return res.status(400).json({ message: "OTP not found or expired" });
+
+    if (parseInt(otp) === validOtp) {
+      delete global.otpStore[phone]; // OTP used
+
+      // Fetch user info
+      const user = await User.findOne({ phone });
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      return res.status(200).json({
+        message: "Login successful!",
+        user: { name: user.name, phone: user.phone }
+      });
+    } else {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+  } catch (err) {
+    console.error("❌ Login OTP verify error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
-// 🔍 Login route (check if phone exists)
+// 🔍 Login route (without OTP, optional)
 app.get("/api/login", async (req, res) => {
   try {
     const { phone } = req.query;
@@ -86,41 +127,25 @@ app.get("/api/login", async (req, res) => {
     const user = await User.findOne({ phone });
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Send user data (no sensitive info)
     res.json({ name: user.name, phone: user.phone });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 });
-app.get("/api/users", async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
 
-// 🛍️ Add item to user's cart
-// 🛍️ Add item to user's cart (or increase quantity)
+// 🛍️ Cart routes
 app.post("/api/cart/add", async (req, res) => {
   try {
     const { phone, product } = req.body;
-
-    if (!phone || !product) {
-      return res.status(400).json({ message: "Phone and product are required" });
-    }
+    if (!phone || !product) return res.status(400).json({ message: "Phone and product are required" });
 
     const user = await User.findOne({ phone });
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Check if product already exists
     const existingItem = user.cart.find(item => item.productId === product.productId);
-
     if (existingItem) {
-      existingItem.quantity += product.quantity || 1; // increment quantity
+      existingItem.quantity += product.quantity || 1;
     } else {
       user.cart.push({ ...product, quantity: product.quantity || 1 });
     }
@@ -133,7 +158,6 @@ app.post("/api/cart/add", async (req, res) => {
   }
 });
 
-// 🧾 Get user's cart
 app.get("/api/cart", async (req, res) => {
   try {
     const { phone } = req.query;
@@ -145,57 +169,6 @@ app.get("/api/cart", async (req, res) => {
     res.json({ cart: user.cart });
   } catch (err) {
     console.error("❌ Get cart error:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-});
-
-// 🗑️ Remove item from cart
-app.post("/api/cart/remove", async (req, res) => {
-  try {
-    const { phone, productId } = req.body;
-
-    if (!phone || !productId) {
-      return res.status(400).json({ message: "Phone and productId are required" });
-    }
-
-    const user = await User.findOne({ phone });
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    user.cart = user.cart.filter(item => item.productId !== productId);
-    await user.save();
-
-    res.json({ message: "Item removed", cart: user.cart });
-  } catch (err) {
-    console.error("❌ Remove from cart error:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-});
-
-// 🔢 Update quantity
-app.post("/api/cart/update", async (req, res) => {
-  try {
-    const { phone, productId, quantity } = req.body;
-
-    if (!phone || !productId || quantity == null) {
-      return res.status(400).json({ message: "Phone, productId and quantity are required" });
-    }
-
-    const user = await User.findOne({ phone });
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    const item = user.cart.find(i => i.productId === productId);
-    if (!item) return res.status(404).json({ message: "Item not found" });
-
-    if (quantity <= 0) {
-      user.cart = user.cart.filter(i => i.productId !== productId);
-    } else {
-      item.quantity = quantity;
-    }
-
-    await user.save();
-    res.json({ message: "Quantity updated", cart: user.cart });
-  } catch (err) {
-    console.error("❌ Update cart error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
