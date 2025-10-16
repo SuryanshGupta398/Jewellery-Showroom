@@ -1,3 +1,397 @@
+const currentGoldPrices = {
+    '24k': 6500,  // 24K gold price per gram
+    '22k': 6000,  // 22K gold price per gram
+    '18k': 5000,  // 18K gold price per gram
+    'silver': 80,  // Silver price per gram
+    'platinum': 3000 // Platinum price per gram
+};
+
+// ===== JEWELLERY DATA GENERATOR =====
+function generateJewelleryData() {
+    const categories = ['rings', 'necklaces', 'bracelets', 'earrings'];
+    const types = {
+        rings: ['diamond', 'emerald', 'ruby', 'sapphire', 'pearl', 'plain', 'designer', 'signet', 'cluster', 'eternity'],
+        necklaces: ['diamond', 'pearl', 'traditional', 'modern', 'choker', 'pendant', 'statement', 'minimalist', 'y necklace', 'layered'],
+        bracelets: ['tennis', 'charm', 'bangle', 'cuff', 'chain', 'beaded', 'tennis', 'tennis', 'tennis', 'tennis'],
+        earrings: ['stud', 'hoop', 'dangler', 'jhumka', 'chandelier', 'threader', 'huggie', 'cluster', 'solitaire', 'traditional']
+    };
+    
+    const materials = ['gold', 'silver', 'platinum'];
+    const karats = ['24k', '22k', '18k'];
+    
+    let jewelleryData = [];
+    let id = 1;
+    
+    categories.forEach(category => {
+        for (let i = 0; i < 50; i++) {
+            const type = types[category][Math.floor(Math.random() * types[category].length)];
+            const material = materials[Math.floor(Math.random() * materials.length)];
+            const karat = material === 'gold' ? karats[Math.floor(Math.random() * karats.length)] : material;
+            
+            // Default weights based on category
+            const defaultWeights = {
+                rings: [2, 3, 4, 5, 6],
+                necklaces: [15, 20, 25, 30, 35],
+                bracelets: [8, 10, 12, 15, 18],
+                earrings: [3, 4, 5, 6, 7]
+            };
+            
+            const defaultWeight = defaultWeights[category][Math.floor(Math.random() * defaultWeights[category].length)];
+            
+            // Base price calculation
+            let basePrice = 0;
+            if (material === 'gold') {
+                basePrice = currentGoldPrices[karat] * defaultWeight;
+            } else if (material === 'silver') {
+                basePrice = currentGoldPrices.silver * defaultWeight;
+            } else {
+                basePrice = currentGoldPrices.platinum * defaultWeight;
+            }
+            
+            // Add premium for stones
+            if (type.includes('diamond')) basePrice += 20000;
+            if (type.includes('emerald') || type.includes('ruby') || type.includes('sapphire')) basePrice += 15000;
+            if (type.includes('pearl')) basePrice += 8000;
+            
+            jewelleryData.push({
+                id: id++,
+                name: `${karat.toUpperCase()} ${type.charAt(0).toUpperCase() + type.slice(1)} ${category.charAt(0).toUpperCase() + category.slice(1)}`,
+                basePrice: Math.round(basePrice),
+                image: `https://images.unsplash.com/photo-${1500000000000 + id}?w=400`,
+                category: category,
+                type: type,
+                material: material,
+                karat: karat,
+                defaultWeight: defaultWeight,
+                description: `Beautiful ${karat} ${material} ${category} with ${type} design. Perfect for special occasions.`
+            });
+        }
+    });
+    
+    return jewelleryData;
+}
+
+// ===== DYNAMIC JEWELLERY DISPLAY =====
+class JewelleryDisplay {
+    constructor() {
+        this.jewelleryData = generateJewelleryData();
+        this.currentFilter = 'all';
+        this.init();
+    }
+
+    init() {
+        this.renderJewelleryCards();
+        this.setupEventListeners();
+    }
+
+    renderJewelleryCards(filter = 'all') {
+        const container = document.getElementById('jewelleryContainer');
+        if (!container) return;
+
+        const filteredData = filter === 'all' 
+            ? this.jewelleryData 
+            : this.jewelleryData.filter(item => item.category === filter);
+
+        container.innerHTML = filteredData.map(item => `
+            <div class="card" data-category="${item.category}" data-id="${item.id}">
+                <img src="${item.image}" alt="${item.name}">
+                <div class="card-info">
+                    <h3>${item.name}</h3>
+                    <p class="description">${item.description}</p>
+                    <div class="price-section">
+                        <span class="price">₹${this.formatPrice(item.basePrice)}</span>
+                        <span class="weight">${item.defaultWeight}g ${item.karat}</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn view-details" data-id="${item.id}">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                        <button class="btn add-to-cart" data-id="${item.id}">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        // Add event listeners to new buttons
+        this.attachCardEventListeners();
+    }
+
+    attachCardEventListeners() {
+        // View Details buttons
+        document.querySelectorAll('.view-details').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const itemId = parseInt(e.target.closest('.view-details').dataset.id);
+                this.showItemDetails(itemId);
+            });
+        });
+
+        // Add to Cart buttons
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const itemId = parseInt(e.target.closest('.add-to-cart').dataset.id);
+                this.addToCart(itemId);
+            });
+        });
+    }
+
+    showItemDetails(itemId) {
+        const item = this.jewelleryData.find(i => i.id === itemId);
+        if (!item) return;
+
+        // Create modal for item details
+        const modal = this.createDetailsModal(item);
+        document.body.appendChild(modal);
+        
+        // Show modal
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    createDetailsModal(item) {
+        const modal = document.createElement('div');
+        modal.className = 'jewellery-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-body">
+                    <div class="modal-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="modal-details">
+                        <h2>${item.name}</h2>
+                        <p class="modal-description">${item.description}</p>
+                        
+                        <div class="specifications">
+                            <h3>Specifications</h3>
+                            <div class="spec-grid">
+                                <div class="spec-item">
+                                    <label>Material:</label>
+                                    <span>${item.material.charAt(0).toUpperCase() + item.material.slice(1)}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <label>Karat:</label>
+                                    <span>${item.karat.toUpperCase()}</span>
+                                </div>
+                                <div class="spec-item">
+                                    <label>Default Weight:</label>
+                                    <span>${item.defaultWeight} grams</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="customization">
+                            <h3>Customize Your Jewellery</h3>
+                            <div class="custom-options">
+                                <div class="option-group">
+                                    <label for="weight-${item.id}">Weight (grams):</label>
+                                    <input type="number" id="weight-${item.id}" 
+                                           min="${Math.max(1, item.defaultWeight - 5)}" 
+                                           max="${item.defaultWeight + 20}" 
+                                           value="${item.defaultWeight}" 
+                                           step="0.5">
+                                </div>
+                                
+                                ${item.material === 'gold' ? `
+                                <div class="option-group">
+                                    <label for="karat-${item.id}">Karat:</label>
+                                    <select id="karat-${item.id}">
+                                        <option value="24k" ${item.karat === '24k' ? 'selected' : ''}>24K Gold</option>
+                                        <option value="22k" ${item.karat === '22k' ? 'selected' : ''}>22K Gold</option>
+                                        <option value="18k" ${item.karat === '18k' ? 'selected' : ''}>18K Gold</option>
+                                    </select>
+                                </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="price-calculation">
+                                <div class="base-price">
+                                    <span>Base Price:</span>
+                                    <span>₹${this.formatPrice(item.basePrice)}</span>
+                                </div>
+                                <div class="custom-price">
+                                    <span>Custom Price:</span>
+                                    <span id="custom-price-${item.id}">₹${this.formatPrice(item.basePrice)}</span>
+                                </div>
+                                <div class="price-breakdown">
+                                    <small>Price updates based on weight and karat selection</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-actions">
+                            <button class="btn btn-secondary close-details">Close</button>
+                            <button class="btn btn-primary add-custom-cart" data-id="${item.id}">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart with Customizations
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add event listeners for modal
+        this.attachModalEventListeners(modal, item);
+        return modal;
+    }
+
+    attachModalEventListeners(modal, item) {
+        // Close modal
+        modal.querySelector('.close-modal').addEventListener('click', () => this.closeModal(modal));
+        modal.querySelector('.close-details').addEventListener('click', () => this.closeModal(modal));
+        
+        // Close when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) this.closeModal(modal);
+        });
+
+        // Price calculation on input change
+        const weightInput = modal.querySelector(`#weight-${item.id}`);
+        const karatSelect = modal.querySelector(`#karat-${item.id}`);
+        const customPriceEl = modal.querySelector(`#custom-price-${item.id}`);
+
+        const updatePrice = () => {
+            const weight = parseFloat(weightInput.value) || item.defaultWeight;
+            const karat = karatSelect ? karatSelect.value : item.karat;
+            const newPrice = this.calculateCustomPrice(item, weight, karat);
+            customPriceEl.textContent = `₹${this.formatPrice(newPrice)}`;
+        };
+
+        weightInput.addEventListener('input', updatePrice);
+        if (karatSelect) karatSelect.addEventListener('change', updatePrice);
+
+        // Add to cart with customizations
+        modal.querySelector('.add-custom-cart').addEventListener('click', () => {
+            const weight = parseFloat(weightInput.value) || item.defaultWeight;
+            const karat = karatSelect ? karatSelect.value : item.karat;
+            this.addToCartWithCustomizations(item, weight, karat);
+            this.closeModal(modal);
+        });
+    }
+
+    calculateCustomPrice(item, weight, karat) {
+        let pricePerGram;
+        
+        if (item.material === 'gold') {
+            pricePerGram = currentGoldPrices[karat];
+        } else if (item.material === 'silver') {
+            pricePerGram = currentGoldPrices.silver;
+        } else {
+            pricePerGram = currentGoldPrices.platinum;
+        }
+
+        // Calculate base metal price
+        let basePrice = pricePerGram * weight;
+
+        // Add premium for stones (proportional to weight change)
+        const weightRatio = weight / item.defaultWeight;
+        let stonePremium = 0;
+        
+        if (item.type.includes('diamond')) stonePremium = 20000 * weightRatio;
+        else if (item.type.includes('emerald') || item.type.includes('ruby') || item.type.includes('sapphire')) 
+            stonePremium = 15000 * weightRatio;
+        else if (item.type.includes('pearl')) stonePremium = 8000 * weightRatio;
+
+        // Add making charges (10% of base price)
+        const makingCharges = basePrice * 0.1;
+
+        return Math.round(basePrice + stonePremium + makingCharges);
+    }
+
+    addToCartWithCustomizations(item, weight, karat) {
+        const customPrice = this.calculateCustomPrice(item, weight, karat);
+        const customItem = {
+            ...item,
+            customWeight: weight,
+            customKarat: karat,
+            finalPrice: customPrice,
+            originalPrice: item.basePrice
+        };
+
+        console.log('Adding to cart:', customItem);
+        this.addToCart(item.id, customItem);
+    }
+
+    addToCart(itemId, customItem = null) {
+        const item = customItem || this.jewelleryData.find(i => i.id === itemId);
+        if (!item) return;
+
+        // Check if user is logged in
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        if (!isLoggedIn) {
+            alert('Please login first to add items to cart.');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const userPhone = localStorage.getItem('userPhone');
+        const cartItem = {
+            productId: item.id,
+            name: item.name,
+            price: customItem ? item.finalPrice : item.basePrice,
+            image: item.image,
+            quantity: 1,
+            customizations: customItem ? {
+                weight: customItem.customWeight,
+                karat: customItem.customKarat,
+                originalPrice: customItem.originalPrice
+            } : null
+        };
+
+        // Send to backend
+        this.sendToCart(userPhone, cartItem);
+    }
+
+    async sendToCart(userPhone, cartItem) {
+        try {
+            const res = await fetch('https://jewellery-website-5xi0.onrender.com/api/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: userPhone, product: cartItem })
+            });
+            
+            const data = await res.json();
+            if (res.ok) {
+                alert(`${cartItem.name} added to cart!`);
+                // Update cart UI if exists
+                if (typeof updateCartUI === 'function') {
+                    updateCartUI(data.cart);
+                }
+            } else {
+                alert(data.message || 'Error adding item to cart');
+            }
+        } catch (err) {
+            console.error('Cart error:', err);
+            alert('Unable to add item. Please try again.');
+        }
+    }
+
+    closeModal(modal) {
+        modal.classList.remove('show');
+        setTimeout(() => modal.remove(), 300);
+    }
+
+    setupEventListeners() {
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const filter = e.target.dataset.category;
+                this.currentFilter = filter;
+                
+                // Update active button
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Render filtered items
+                this.renderJewelleryCards(filter);
+            });
+        });
+    }
+
+    formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+}
 // ===== ROYAL PREMIUM ANIMATION WITH FLOATING ELEMENTS =====
 class RoyalAnimation {
     constructor() {
@@ -455,7 +849,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialize Floating Elements Manager
     const floatingManager = new FloatingElementsManager();
-
+ const jewelleryDisplay = new JewelleryDisplay();
     // ===== REGISTER FORM =====
     const registerForm = document.getElementById("registerForm");
     if (registerForm) {
@@ -717,16 +1111,34 @@ if (loginForm) {
     }
 
     // ===== CARD REVEAL ANIMATION =====
-    const cards = document.querySelectorAll(".card");
     function revealCards() {
+        const cards = document.querySelectorAll('.card');
         const triggerBottom = window.innerHeight * 0.85;
+        
         cards.forEach(card => {
             const cardTop = card.getBoundingClientRect().top;
             if (cardTop < triggerBottom) {
-                card.classList.add("visible");
+                card.classList.add('visible');
             }
         });
     }
+
+    // Observe DOM changes for new cards
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList') {
+                revealCards();
+            }
+        });
+    });
+
+    const container = document.getElementById('jewelleryContainer');
+    if (container) {
+        observer.observe(container, { childList: true, subtree: true });
+    }
+
+    // Initial reveal
+    revealCards();
 
     // Initialize card animations
     window.addEventListener("scroll", revealCards);
@@ -749,30 +1161,20 @@ if (loginForm) {
     });
 
     // ===== FILTER FUNCTIONALITY =====
-    const filterButtons = document.querySelectorAll(".filter-btn");
-
+    const filterButtons = document.querySelectorAll('.filter-btn');
     filterButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener('click', (e) => {
             // Remove active class from all
-            filterButtons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
             const category = btn.dataset.category;
-
-            cards.forEach(card => {
-                if (category === "all" || card.dataset.category === category) {
-                    card.style.display = "block";
-                    setTimeout(() => card.classList.add("visible"), 50);
-                } else {
-                    card.style.display = "none";
-                    card.classList.remove("visible");
-                }
-            });
+            jewelleryDisplay.renderJewelleryCards(category);
 
             // Smooth scroll to collections section
-            const collectionsSection = document.querySelector("#collections");
+            const collectionsSection = document.querySelector('#collections');
             if (collectionsSection) {
-                collectionsSection.scrollIntoView({ behavior: "smooth" });
+                collectionsSection.scrollIntoView({ behavior: 'smooth' });
             }
         });
     });
@@ -836,6 +1238,7 @@ if (loginForm) {
         animation-duration: 6s;
     }
 }*/
+
 
 
 
