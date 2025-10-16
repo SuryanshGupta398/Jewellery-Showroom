@@ -39,376 +39,44 @@
     <div class="hero-content">
       <h1>Discover Timeless Beauty</h1>
       <p>Luxury handcrafted jewellery made to perfection. Each piece tells a story of elegance and craftsmanship.</p>
-      <button class="btn"><i class="fas fa-gem"></i> Explore Collection</button>
+      <button class="btn" id="exploreBtn"><i class="fas fa-gem"></i> Explore Collection</button>
     </div>
   </section>
+
   <!-- Collection Section -->
   <section id="collections" class="collections">
     <h2 class="section-title">Our Exquisite Collections</h2>
     <p class="section-subtitle">Discover our handcrafted jewellery pieces that celebrate elegance and craftsmanship</p>
 
-    <!-- ===== FILTER BUTTONS ===== -->
+    <!-- Filter Buttons -->
     <div class="filter-buttons">
       <button class="filter-btn active" data-category="all">All</button>
       <button class="filter-btn" data-category="rings">Rings</button>
       <button class="filter-btn" data-category="necklaces">Necklaces</button>
+      <button class="filter-btn" data-category="bracelets">Bracelets</button>
       <button class="filter-btn" data-category="earrings">Earrings</button>
     </div>
 
-
-    <div class="collection-grid">
-      <!-- Rings -->
-      <div class="card" data-category="rings" data-product-id="diamond-ring-001">
-        <div class="card-badge">Bestseller</div>
-        <img
-          src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Diamond Ring">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Eternal Diamond Ring</h3>
-          <p class="price">₹49,999</p>
-          <button class="details-btn">View Details</button>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>(128)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <div class="card" data-category="rings" data-product-id="gold-ring-002">
-        <img
-          src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Gold Ring">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Golden Grace Ring</h3>
-          <p class="price">₹24,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class=" fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-            <span>(89)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <div class="card" data-category="rings">
-        <div class="card-badge">New</div>
-        <img
-          src="https://images.unsplash.com/photo-1606065900592-56b7ceabe20f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Pearl Ring">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Pearl Elegance Ring</h3>
-          <p class="price">₹32,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <span>(64)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <!-- Necklaces -->
-      <div class="card" data-category="necklaces">
-        <img
-          src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Gold Necklace">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Royal Gold Necklace</h3>
-          <p class="price">₹89,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>(156)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <div class="card" data-category="necklaces">
-        <div class="card-badge">Popular</div>
-        <img
-          src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Diamond Necklace">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Diamond Cascade</h3>
-          <p class="price">₹1,24,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <span>(203)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <div class="card" data-category="necklaces">
-        <img
-          src="https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Pearl Necklace">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Pearl Strand Classic</h3>
-          <p class="price">₹45,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-            <span>(97)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <!-- Bracelets -->
-      <div class="card" data-category="bracelets">
-        <img
-          src="https://images.unsplash.com/photo-1588444650700-6c7f0c89d36b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Gold Bracelet">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Elegant Gold Bracelet</h3>
-          <p class="price">₹39,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>(142)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <div class="card" data-category="bracelets">
-        <div class="card-badge">Sale</div>
-        <img
-          src="https://images.unsplash.com/photo-1551103786326-10dfeff6d7c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Diamond Bracelet">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Diamond Tennis Bracelet</h3>
-          <p class="price"><span class="old-price">₹75,999</span> ₹62,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-            <span>(78)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <!-- Earrings -->
-      <div class="card" data-category="earrings">
-        <img
-          src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Diamond Earrings">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Diamond Stud Earrings</h3>
-          <p class="price">₹28,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <span>(211)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <div class="card" data-category="earrings">
-        <img
-          src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Gold Earrings">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Gold Hoop Earrings</h3>
-          <p class="price">₹19,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-            <span>(134)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <div class="card" data-category="earrings">
-        <div class="card-badge">Limited</div>
-        <img
-          src="https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Pearl Earrings">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Pearl Drop Earrings</h3>
-          <p class="price">₹34,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>(89)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-
-      <div class="card" data-category="bracelets">
-        <img
-          src="https://images.unsplash.com/photo-1584377334015-9c0c0138ac59?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-          alt="Silver Bracelet">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>Silver Charm Bracelet</h3>
-          <p class="price">₹22,999</p>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-            <span>(67)</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      </div>
+    <div class="collection-grid" id="collectionGrid">
+      <!-- Products will be dynamically generated here -->
     </div>
 
     <div class="load-more-container">
-      <button class="btn load-more">Load More Jewellery</button>
+      <button class="btn load-more" id="loadMoreBtn">Load More Jewellery</button>
     </div>
   </section>
-  <!-- ===== STORE LOCATION SECTION ===== -->
+
+  <!-- Product Details Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeModal">&times;</span>
+      <div class="product-details" id="productDetails">
+        <!-- Product details will be dynamically inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Store Location Section -->
   <section id="store-location" class="store-map">
     <h2>Find Our Store</h2>
     <p>Visit our showroom for exclusive jewellery collections</p>
@@ -416,7 +84,7 @@
     <div class="map-container">
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d918048.0575345628!2d77.933315278125!3d25.996715000000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3977cd01da08096d%3A0xcb48980c9d099681!2sPrabhanjan%20Jewellers!5e0!3m2!1sen!2sin!4v1760293893151!5m2!1sen!2sin"
-        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
         referrerpolicy="no-referrer-when-downgrade">
       </iframe>
     </div>
@@ -427,13 +95,10 @@
     <div class="footer-content">
       <div class="footer-column">
         <h3>Shimmer & Shine</h3>
-        <p>Crafting exquisite jewellery since 2010. Our mission is to bring elegance and beauty to your special moments.
-        </p>
+        <p>Crafting exquisite jewellery since 2010. Our mission is to bring elegance and beauty to your special moments.</p>
         <div class="social-links">
           <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a
-            href="https://www.instagram.com/pmjewellerspvtltd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i
-              class="fab fa-instagram"></i></a>
+          <a href="https://www.instagram.com/pmjewellerspvtltd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i class="fab fa-instagram"></i></a>
           <a href="#"><i class="fab fa-twitter"></i></a>
           <a href="#"><i class="fab fa-pinterest"></i></a>
         </div>
@@ -478,3 +143,4 @@
 
 
 </html>
+
