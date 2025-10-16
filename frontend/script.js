@@ -483,6 +483,7 @@ class JewelleryDisplay {
 }
 
 // ===== ROYAL ANIMATION SYSTEM =====
+// ===== ROYAL PREMIUM ANIMATION WITH FLOATING ELEMENTS =====
 class RoyalAnimation {
     constructor() {
         this.animationShown = sessionStorage.getItem('royalAnimationShown');
@@ -496,11 +497,16 @@ class RoyalAnimation {
 
     init() {
         const isHomePage = this.isHomePage();
+        
+        // Check if user wants to see animation again (via URL parameter or button)
         const showAgain = new URLSearchParams(window.location.search).get('showAnimation') === 'true';
         const forceShow = localStorage.getItem('forceShowAnimation') === 'true';
         
         if (isHomePage && (!this.animationShown || showAgain || forceShow)) {
-            if (forceShow) localStorage.removeItem('forceShowAnimation');
+            // Clear force show flag after use
+            if (forceShow) {
+                localStorage.removeItem('forceShowAnimation');
+            }
             this.showRoyalAnimation();
         } else {
             this.skipAnimation();
@@ -517,11 +523,19 @@ class RoyalAnimation {
 
     showRoyalAnimation() {
         console.log('🦄 Showing royal premium animation');
-        document.body.style.overflow = 'hidden';
         
+        // Hide main content
+        document.body.style.overflow = 'hidden';
+
+        // Create royal overlay
         const overlay = this.createRoyalOverlay();
         document.body.appendChild(overlay);
-        
+
+        // Initialize particles and floating elements
+        this.createRoyalParticles();
+        this.createAnimationFloatingElements();
+
+        // Start countdown
         this.startRoyalCountdown();
     }
 
@@ -529,18 +543,46 @@ class RoyalAnimation {
         const overlay = document.createElement('div');
         overlay.className = 'royal-welcome-overlay';
         overlay.id = 'royalWelcomeOverlay';
+
         overlay.innerHTML = `
+            <div class="royal-pattern"></div>
+            <div class="royal-particles" id="royalParticles"></div>
+            <div class="royal-floating-elements" id="royalFloatingElements"></div>
+            
             <div class="royal-welcome-container">
                 <div class="royal-welcome-card">
                     <div class="royal-crown">👑</div>
                     <div class="royal-logo">Prabhanjan Mragendra Jewellers PVT LTD</div>
                     <div class="royal-tagline">Prabhanjan Jewellers</div>
+                    
+                    <div class="royal-diamond-showcase">
+                        <div class="royal-diamond"></div>
+                    </div>
+                    
                     <div class="royal-message">
                         Enter our exclusive world of luxury jewellery, where every piece tells a story of royal craftsmanship and timeless elegance.
                     </div>
+                    
                     <button class="royal-enter-btn" id="royalEnterBtn">
-                        <i class="fas fa-gem"></i> Enter Royal Boutique
+                        <i class="fas fa-gem royal-btn-icon"></i>
+                        Enter Royal Boutique
                     </button>
+
+                    <div class="royal-options">
+                        <label class="royal-checkbox">
+                            <input type="checkbox" id="showAgainCheckbox">
+                            <span class="checkmark"></span>
+                            Show this animation next time
+                        </label>
+                        <button class="royal-skip-btn" id="royalSkipBtn">
+                            Skip Animation
+                        </button>
+                    </div>
+                    
+                    <div class="royal-loading-bar">
+                        <div class="royal-loading-progress"></div>
+                    </div>
+                    
                     <div class="royal-countdown" id="royalCountdown">
                         Entering automatically in <span id="countdownNumber">5</span> seconds
                     </div>
@@ -548,12 +590,90 @@ class RoyalAnimation {
             </div>
         `;
 
-        overlay.querySelector('#royalEnterBtn').addEventListener('click', () => this.enterBoutique());
+        // Add event listeners
+        const enterBtn = overlay.querySelector('#royalEnterBtn');
+        enterBtn.addEventListener('click', () => this.enterBoutique());
+
+        const skipBtn = overlay.querySelector('#royalSkipBtn');
+        skipBtn.addEventListener('click', () => this.skipAnimation());
+
+        const checkbox = overlay.querySelector('#showAgainCheckbox');
+        checkbox.addEventListener('change', (e) => {
+            localStorage.setItem('showAnimationNextTime', e.target.checked.toString());
+        });
+
+        // Set checkbox state
+        const showNextTime = localStorage.getItem('showAnimationNextTime') === 'true';
+        checkbox.checked = showNextTime;
+
         return overlay;
     }
 
+    createRoyalParticles() {
+        const particlesContainer = document.getElementById('royalParticles');
+        if (!particlesContainer) return;
+
+        // Limit particles for mobile performance
+        const particleCount = this.isMobile ? 5 : 9;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'royal-particle';
+            
+            // Randomize properties
+            const left = Math.random() * 100;
+            const delay = Math.random() * 10;
+            const duration = 6 + Math.random() * 4;
+            
+            particle.style.left = `${left}%`;
+            particle.style.animationDelay = `${delay}s`;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.background = this.getRandomGoldColor();
+            
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    createAnimationFloatingElements() {
+        const floatingContainer = document.getElementById('royalFloatingElements');
+        if (!floatingContainer) return;
+
+        const animationJewels = ['💎', '✨', '🌟', '💫', '⭐', '🔮', '💍', '🔶', '💠'];
+        const elementCount = this.isMobile ? 8 : 12;
+
+        for (let i = 0; i < elementCount; i++) {
+            const element = document.createElement('div');
+            element.className = 'royal-floating-element';
+            
+            // Random properties for natural movement
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            const delay = Math.random() * 5;
+            const duration = 10 + Math.random() * 8;
+            const size = 1.5 + Math.random() * 1.5;
+            
+            element.textContent = animationJewels[Math.floor(Math.random() * animationJewels.length)];
+            element.style.left = `${left}%`;
+            element.style.top = `${top}%`;
+            element.style.animationDelay = `${delay}s`;
+            element.style.animationDuration = `${duration}s`;
+            element.style.fontSize = `${size}rem`;
+            element.style.opacity = '0.7';
+            element.style.filter = `hue-rotate(${Math.random() * 360}deg) brightness(1.2)`;
+            
+            floatingContainer.appendChild(element);
+        }
+    }
+
+    getRandomGoldColor() {
+        const goldColors = [
+            '#d4af37', '#f5c542', '#ffd700', '#daa520', '#b8860b'
+        ];
+        return goldColors[Math.floor(Math.random() * goldColors.length)];
+    }
+
     startRoyalCountdown() {
-        let countdown = 5;
+        let countdown = 15;
         const countdownEl = document.getElementById('countdownNumber');
         const countdownInterval = setInterval(() => {
             countdown--;
@@ -567,50 +687,250 @@ class RoyalAnimation {
     }
 
     enterBoutique() {
+        console.log('🏰 Entering royal boutique...');
+        
+        // Check if user wants to see animation next time
         const showNextTime = localStorage.getItem('showAnimationNextTime') === 'true';
-        if (!showNextTime) {
+        if (showNextTime) {
+            // Don't set session storage, so animation shows next time
+            console.log('🎭 Animation will show again next time');
+        } else {
+            // Mark as shown for this session
             sessionStorage.setItem('royalAnimationShown', 'true');
         }
         
         const overlay = document.getElementById('royalWelcomeOverlay');
         if (overlay) {
-            overlay.remove();
+            // Add exit animation
+            overlay.classList.add('exiting');
+            
+            setTimeout(() => {
+                // Remove overlay
+                overlay.remove();
+                
+                // Show main content
+                this.showMainContent();
+                
+                console.log('🎉 Royal animation completed');
+            }, 800);
+        } else {
+            this.showMainContent();
         }
-        
-        this.showMainContent();
     }
 
     showMainContent() {
+        document.body.classList.add('loaded');
         document.body.style.overflow = 'auto';
+        
+        // Initialize any additional animations
+        this.initializePageAnimations();
+        
+        // Add "Show Animation Again" button to navbar
         this.addAnimationToggleButton();
     }
 
     skipAnimation() {
+        console.log('⚡ Skipping royal animation');
+        // Mark as shown for this session
         sessionStorage.setItem('royalAnimationShown', 'true');
         this.showMainContent();
+        
+        const overlay = document.getElementById('royalWelcomeOverlay');
+        if (overlay) {
+            overlay.remove();
+        }
     }
 
     addAnimationToggleButton() {
+        // Add button to show animation again
         const navLinks = document.querySelector('.nav-links');
         if (navLinks && !document.getElementById('showAnimationBtn')) {
             const showAnimationBtn = document.createElement('a');
             showAnimationBtn.id = 'showAnimationBtn';
             showAnimationBtn.href = '#';
-            showAnimationBtn.className = 'btn';
+            showAnimationBtn.className = 'btn royal-animation-btn';
             showAnimationBtn.innerHTML = '<i class="fas fa-crown"></i> Show Intro';
             showAnimationBtn.style.marginLeft = '10px';
+            showAnimationBtn.style.background = 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)';
             
             showAnimationBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                localStorage.setItem('forceShowAnimation', 'true');
-                window.location.reload();
+                this.showAnimationAgain();
             });
             
             navLinks.appendChild(showAnimationBtn);
         }
     }
+
+    showAnimationAgain() {
+        // Force show animation on next load
+        localStorage.setItem('forceShowAnimation', 'true');
+        // Reload the page
+        window.location.reload();
+    }
+
+    initializePageAnimations() {
+        // Initialize card animations
+        this.initializeCardAnimations();
+        
+        // Initialize homepage floating elements
+        this.initializeHomepageFloatingElements();
+    }
+
+    initializeCardAnimations() {
+        const cards = document.querySelectorAll('.card');
+        const revealCards = () => {
+            const triggerBottom = window.innerHeight * 0.85;
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                if (cardTop < triggerBottom) {
+                    card.classList.add('visible');
+                }
+            });
+        };
+
+        // Throttle scroll for performance
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(() => {
+                    revealCards();
+                    scrollTimeout = null;
+                }, 100);
+            }
+        });
+
+        // Initial reveal
+        revealCards();
+    }
+
+    initializeHomepageFloatingElements() {
+        const heroSection = document.querySelector('.hero');
+        if (!heroSection) return;
+
+        // Remove existing floating elements if any
+        const existingFloating = document.getElementById('homepageFloatingElements');
+        if (existingFloating) {
+            existingFloating.remove();
+        }
+
+        const floatingContainer = document.createElement('div');
+        floatingContainer.className = 'floating-elements';
+        floatingContainer.id = 'homepageFloatingElements';
+        
+        const jewels = ['💎', '✨', '🔶', '💍', '🌟', '💫', '⭐', '🔸', '💠'];
+        const elementCount = this.isMobile ? 6 : 9;
+        
+        for (let i = 0; i < elementCount; i++) {
+            const element = this.createHomepageFloatingElement(jewels[i], i, elementCount);
+            floatingContainer.appendChild(element);
+        }
+        
+        heroSection.appendChild(floatingContainer);
+        console.log('🎈 Homepage floating elements created');
+    }
+
+    createHomepageFloatingElement(jewel, index, totalCount) {
+        const element = document.createElement('div');
+        element.className = 'floating-element';
+        element.textContent = jewel;
+        
+        const position = ((index + 1) * (100 / (totalCount + 1)));
+        const delay = index * 0.7;
+        const duration = 8 + Math.random() * 4;
+        const size = 1.2 + Math.random() * 0.8;
+        
+        element.style.left = `${position}%`;
+        element.style.animationDelay = `${delay}s`;
+        element.style.animationDuration = `${duration}s`;
+        element.style.fontSize = `${size}rem`;
+        element.style.opacity = '0.8';
+        element.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+        return element;
+    }
 }
 
+// ===== FLOATING ELEMENTS MANAGER FOR HOMEPAGE =====
+class FloatingElementsManager {
+    constructor() {
+        this.isMobile = window.innerWidth <= 768;
+        this.init();
+    }
+
+    init() {
+        // Only initialize on homepage
+        if (this.isHomePage() && !document.getElementById('homepageFloatingElements')) {
+            this.createFloatingElements();
+            this.setupResizeHandler();
+        }
+    }
+
+    isHomePage() {
+        return document.querySelector('.hero') !== null && 
+               !window.location.pathname.includes('login.html') &&
+               !window.location.pathname.includes('register.html');
+    }
+
+    createFloatingElements() {
+        const heroSection = document.querySelector('.hero');
+        if (!heroSection) return;
+
+        const floatingContainer = document.createElement('div');
+        floatingContainer.className = 'floating-elements';
+        floatingContainer.id = 'homepageFloatingElements';
+        
+        const jewels = ['💎', '✨', '🔶', '💍', '🌟', '💫', '⭐', '🔸', '💠'];
+        const elementCount = this.isMobile ? 6 : 9;
+        
+        for (let i = 0; i < elementCount; i++) {
+            const element = this.createFloatingElement(jewels[i], i, elementCount);
+            floatingContainer.appendChild(element);
+        }
+        
+        heroSection.appendChild(floatingContainer);
+        console.log(`🎈 Created ${elementCount} homepage floating elements`);
+    }
+
+    createFloatingElement(jewel, index, totalCount) {
+        const element = document.createElement('div');
+        element.className = 'floating-element';
+        element.textContent = jewel;
+        
+        // Calculate position for even distribution
+        const position = ((index + 1) * (100 / (totalCount + 1)));
+        
+        // Randomize properties for natural look
+        const delay = index * 0.7;
+        const duration = 8 + Math.random() * 4;
+        const size = 1.2 + Math.random() * 0.8;
+        
+        element.style.left = `${position}%`;
+        element.style.animationDelay = `${delay}s`;
+        element.style.animationDuration = `${duration}s`;
+        element.style.fontSize = `${size}rem`;
+        element.style.opacity = '0.8';
+        
+        // Add slight rotation for variety
+        element.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+        return element;
+    }
+
+    setupResizeHandler() {
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const newIsMobile = window.innerWidth <= 768;
+                if (newIsMobile !== this.isMobile) {
+                    this.isMobile = newIsMobile;
+                    this.createFloatingElements();
+                }
+            }, 250);
+        });
+    }
+}
 // ===== MAIN APP INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", () => {
     console.log('DOMContentLoaded - Main app code running');
@@ -998,3 +1318,4 @@ window.addEventListener('scroll', () => {
 });
 
 console.log('👑 Royal Jewellery App Initialized Successfully');
+
