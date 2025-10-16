@@ -66,7 +66,7 @@ class JewelleryDisplay {
     }
 
     renderProducts() {
-        const collectionGrid = document.getElementById('collectionGrid');
+        const collectionGrid = document.getElementById('jewelleryContainer');
         if (!collectionGrid) {
             console.error('❌ collectionGrid not found!');
             return;
@@ -1318,4 +1318,5 @@ window.addEventListener('scroll', () => {
 });
 
 console.log('👑 Royal Jewellery App Initialized Successfully');
+
 
