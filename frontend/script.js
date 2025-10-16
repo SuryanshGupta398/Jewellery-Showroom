@@ -759,295 +759,242 @@ if (loginForm) {
         }
     });
 }
-    // ===== GLOBAL VARIABLES =====
-    const userPhone = localStorage.getItem("userPhone");
-    const userName = localStorage.getItem("userName");
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
 
-    // ===== QUANTITY INCREMENT / DECREMENT ON HOMEPAGE =====
-    document.querySelectorAll(".card-info").forEach(card => {
-        const decreaseBtn = card.querySelector(".decrease");
-        const increaseBtn = card.querySelector(".increase");
-        const qtySpan = card.querySelector(".qty");
+// ===== GLOBAL VARIABLES =====
+const userPhone = localStorage.getItem("userPhone");
+const userName = localStorage.getItem("userName");
+const isLoggedIn = localStorage.getItem("isLoggedIn");
 
-        if (decreaseBtn && increaseBtn && qtySpan) {
-            decreaseBtn.addEventListener("click", () => {
-                let qty = parseInt(qtySpan.textContent);
-                if (qty > 1) qtySpan.textContent = qty - 1;
-            });
+// ===== QUANTITY INCREMENT / DECREMENT ON HOMEPAGE =====
+document.querySelectorAll(".card-info").forEach(card => {
+    const decreaseBtn = card.querySelector(".decrease");
+    const increaseBtn = card.querySelector(".increase");
+    const qtySpan = card.querySelector(".qty");
 
-            increaseBtn.addEventListener("click", () => {
-                let qty = parseInt(qtySpan.textContent);
-                qtySpan.textContent = qty + 1;
-            });
-        }
-    });
-
-    // ===== ADD TO CART FUNCTION =====
-    async function handleAddToCart(card) {
-        if (!isLoggedIn) {
-            alert("Please login first.");
-            window.location.href = "login.html";
-            return;
-        }
-
-        const productId = card.dataset.productId || card.querySelector("h3").textContent;
-        const name = card.querySelector("h3").innerText;
-        const price = parseInt(card.querySelector(".price").innerText.replace(/[₹,]/g, ""));
-        const image = card.closest(".card").querySelector("img").src;
-
-        let quantity = 1;
-        const qtyEl = card.querySelector(".qty");
-        if (qtyEl) quantity = parseInt(qtyEl.textContent) || 1;
-
-        const product = { productId, name, price, image, quantity };
-
-        try {
-            const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/add", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ phone: userPhone, product })
-            });
-            const data = await res.json();
-            if (res.ok) {
-                alert(`${name} added to your cart (x${quantity})!`);
-                updateCartUI(data.cart);
-
-                if (qtyEl) qtyEl.textContent = 1; // reset after add
-            } else {
-                alert(data.message || "Error adding item to cart");
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Unable to add item. Try again later.");
-        }
-    }
-
-    // ===== UPDATE CART UI =====
-    function updateCartUI(cart) {
-        const cartContainer = document.querySelector(".cart-items");
-        if (!cartContainer) return;
-
-        cartContainer.innerHTML = "";
-        let total = 0;
-
-        cart.forEach((item) => {
-            total += item.price * item.quantity;
-            cartContainer.innerHTML += `
-                <div class="cart-item">
-                    <span>${item.name}</span>
-                    <div class="quantity-controls">
-                        <button class="decrease" data-id="${item.productId}">-</button>
-                        <span>${item.quantity}</span>
-                        <button class="increase" data-id="${item.productId}">+</button>
-                    </div>
-                    <span>₹${item.price * item.quantity}</span>
-                </div>
-            `;
+    if (decreaseBtn && increaseBtn && qtySpan) {
+        decreaseBtn.addEventListener("click", () => {
+            let qty = parseInt(qtySpan.textContent);
+            if (qty > 1) qtySpan.textContent = qty - 1;
         });
 
-        const totalEl = document.querySelector(".cart-total");
-        if (totalEl) totalEl.textContent = `Total: ₹${total}`;
-
-        document.querySelectorAll(".increase").forEach(btn => {
-            btn.addEventListener("click", () => changeQuantity(btn.dataset.id, 1));
-        });
-        document.querySelectorAll(".decrease").forEach(btn => {
-            btn.addEventListener("click", () => changeQuantity(btn.dataset.id, -1));
+        increaseBtn.addEventListener("click", () => {
+            let qty = parseInt(qtySpan.textContent);
+            qtySpan.textContent = qty + 1;
         });
     }
-
-    // ===== CHANGE QUANTITY (Backend) =====
-    async function changeQuantity(productId, delta) {
-        try {
-            const phone = localStorage.getItem("userPhone");
-            const resCart = await fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${phone}`);
-            const data = await resCart.json();
-            const item = data.cart.find(i => i.productId === productId);
-            if (!item) return;
-
-            const newQty = item.quantity + delta;
-            const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/update", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ phone, productId, quantity: newQty })
-            });
-            const updatedData = await res.json();
-            if (res.ok) updateCartUI(updatedData.cart);
-            else alert(updatedData.message || "Error updating quantity");
-        } catch (err) {
-            console.error(err);
-            alert("Server error. Try again later.");
-        }
-    }
-
-    // ===== INITIALIZE CART =====
-    if (isLoggedIn) {
-        fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${encodeURIComponent(userPhone)}`)
-            .then(res => res.json())
-            .then(data => updateCartUI(data.cart))
-            .catch(err => console.error(err));
-    }
-
-    // ===== ADD TO CART BUTTON EVENTS =====
-    document.querySelectorAll(".add-to-cart").forEach(btn => {
-        btn.addEventListener("click", e => {
-            const card = e.target.closest(".card-info");
-            if (!card) return;
-            handleAddToCart(card);
-        });
-    });
-
-    // ===== NAVBAR LOGIN / LOGOUT =====
-    const loginBtnNav = document.getElementById("loginbtn");
-    if (isLoggedIn) {
-        const displayName = userName || userPhone;
-        const marquee = document.querySelector(".marquee");
-        if (marquee) marquee.textContent = `🎉 Welcome, ${displayName}! Explore our jewellery collections! ✨`;
-        if (loginBtnNav) loginBtnNav.style.display = "none";
-
-        const navLinks = loginBtnNav?.parentNode;
-        if (navLinks) {
-            const logoutBtn = document.createElement("a");
-            logoutBtn.textContent = "Logout";
-            logoutBtn.href = "#";
-            logoutBtn.className = "btn";
-            logoutBtn.style.marginLeft = "10px";
-            logoutBtn.onclick = e => {
-                e.preventDefault();
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.reload();
-            };
-            navLinks.appendChild(logoutBtn);
-        }
-    }
-
-    // ===== CARD REVEAL ANIMATION =====
-    const cards = document.querySelectorAll(".card");
-    function revealCards() {
-        const triggerBottom = window.innerHeight * 0.85;
-        cards.forEach(card => {
-            const cardTop = card.getBoundingClientRect().top;
-            if (cardTop < triggerBottom) {
-                card.classList.add("visible");
-            }
-        });
-    }
-
-    // Initialize card animations
-    window.addEventListener("scroll", revealCards);
-    window.addEventListener("load", revealCards);
-
-    // ===== NAVBAR SCROLL EFFECT =====
-    const navbar = document.querySelector(".navbar");
-    window.addEventListener("scroll", () => {
-        if (navbar) {
-            navbar.style.background = window.scrollY > 50
-                ? "rgba(255, 255, 255, 0.9)"
-                : "rgba(255, 255, 255, 0.25)";
-        }
-    });
-
-    // ===== HERO BUTTON SCROLL =====
-    const scrollBtn = document.querySelector(".hero .btn");
-    if (scrollBtn) scrollBtn.addEventListener("click", () => {
-        document.querySelector("#collections").scrollIntoView({ behavior: "smooth" });
-    });
-
-    // ===== FILTER FUNCTIONALITY =====
-    const filterButtons = document.querySelectorAll(".filter-btn");
-
-    filterButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            // Remove active class from all
-            filterButtons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-
-            const category = btn.dataset.category;
-
-            cards.forEach(card => {
-                if (category === "all" || card.dataset.category === category) {
-                    card.style.display = "block";
-                    setTimeout(() => card.classList.add("visible"), 50);
-                } else {
-                    card.style.display = "none";
-                    card.classList.remove("visible");
-                }
-            });
-
-            // Smooth scroll to collections section
-            const collectionsSection = document.querySelector("#collections");
-            if (collectionsSection) {
-                collectionsSection.scrollIntoView({ behavior: "smooth" });
-            }
-        });
-    });
-
-    // ===== PERFORMANCE OPTIMIZATIONS =====
-    // Throttle scroll events for better performance
-    let scrollTimeout;
-    window.addEventListener('scroll', () => {
-        if (!scrollTimeout) {
-            scrollTimeout = setTimeout(() => {
-                revealCards();
-                scrollTimeout = null;
-            }, 100);
-        }
-    });
-
-    console.log('👑 Royal Jewellery App Initialized Successfully');
 });
 
-// ===== ENHANCED FLOATING ELEMENTS CSS (Add this to your CSS) =====
-/*
-.floating-elements {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
+// ===== ADD TO CART FUNCTION =====
+async function handleAddToCart(card) {
+    if (!isLoggedIn) {
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const productId = card.dataset.productId || card.querySelector("h3").textContent;
+    const name = card.querySelector("h3").innerText;
+    const price = parseInt(card.querySelector(".price").innerText.replace(/[₹,]/g, ""));
+    const image = card.closest(".card").querySelector("img").src;
+
+    let quantity = 1;
+    const qtyEl = card.querySelector(".qty");
+    if (qtyEl) quantity = parseInt(qtyEl.textContent) || 1;
+
+    const product = { productId, name, price, image, quantity };
+
+    try {
+        const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ phone: userPhone, product })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert(`${name} added to your cart (x${quantity})!`);
+            updateCartUI(data.cart);
+
+            if (qtyEl) qtyEl.textContent = 1; // reset after add
+        } else {
+            alert(data.message || "Error adding item to cart");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Unable to add item. Try again later.");
+    }
 }
 
-.floating-element {
-    position: absolute;
-    font-size: 1.5rem;
-    opacity: 0;
-    animation: floatElement 8s ease-in-out infinite;
-    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-    will-change: transform, opacity;
-    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+// ===== UPDATE CART UI =====
+function updateCartUI(cart) {
+    const cartContainer = document.querySelector(".cart-items");
+    if (!cartContainer) return;
+
+    cartContainer.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item) => {
+        total += item.price * item.quantity;
+        cartContainer.innerHTML += `
+            <div class="cart-item">
+                <span>${item.name}</span>
+                <div class="quantity-controls">
+                    <button class="decrease" data-id="${item.productId}">-</button>
+                    <span>${item.quantity}</span>
+                    <button class="increase" data-id="${item.productId}">+</button>
+                </div>
+                <span>₹${item.price * item.quantity}</span>
+            </div>
+        `;
+    });
+
+    const totalEl = document.querySelector(".cart-total");
+    if (totalEl) totalEl.textContent = `Total: ₹${total}`;
+
+    document.querySelectorAll(".increase").forEach(btn => {
+        btn.addEventListener("click", () => changeQuantity(btn.dataset.id, 1));
+    });
+    document.querySelectorAll(".decrease").forEach(btn => {
+        btn.addEventListener("click", () => changeQuantity(btn.dataset.id, -1));
+    });
 }
 
-@keyframes floatElement {
-    0%, 100% {
-        transform: translateY(100vh) rotate(0deg) scale(0.8);
-        opacity: 0;
-    }
-    10% {
-        opacity: 0.8;
-    }
-    50% {
-        transform: translateY(30vh) rotate(180deg) scale(1.2);
-        opacity: 1;
-    }
-    90% {
-        opacity: 0.6;
+// ===== CHANGE QUANTITY (Backend) =====
+async function changeQuantity(productId, delta) {
+    try {
+        const phone = localStorage.getItem("userPhone");
+        const resCart = await fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${phone}`);
+        const data = await resCart.json();
+        const item = data.cart.find(i => i.productId === productId);
+        if (!item) return;
+
+        const newQty = item.quantity + delta;
+        const res = await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ phone, productId, quantity: newQty })
+        });
+        const updatedData = await res.json();
+        if (res.ok) updateCartUI(updatedData.cart);
+        else alert(updatedData.message || "Error updating quantity");
+    } catch (err) {
+        console.error(err);
+        alert("Server error. Try again later.");
     }
 }
 
-/* Mobile optimizations */
-/*@media (max-width: 768px) {
-    .floating-element {
-        font-size: 1.2rem;
-        animation-duration: 6s;
+// ===== INITIALIZE CART =====
+if (isLoggedIn) {
+    fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${encodeURIComponent(userPhone)}`)
+        .then(res => res.json())
+        .then(data => updateCartUI(data.cart))
+        .catch(err => console.error(err));
+}
+
+// ===== ADD TO CART BUTTON EVENTS =====
+document.querySelectorAll(".add-to-cart").forEach(btn => {
+    btn.addEventListener("click", e => {
+        const card = e.target.closest(".card-info");
+        if (!card) return;
+        handleAddToCart(card);
+    });
+});
+
+// ===== NAVBAR LOGIN / LOGOUT =====
+const loginBtnNav = document.getElementById("loginbtn");
+if (isLoggedIn) {
+    const displayName = userName || userPhone;
+    const marquee = document.querySelector(".marquee");
+    if (marquee) marquee.textContent = `🎉 Welcome, ${displayName}! Explore our jewellery collections! ✨`;
+    if (loginBtnNav) loginBtnNav.style.display = "none";
+
+    const navLinks = loginBtnNav?.parentNode;
+    if (navLinks) {
+        const logoutBtn = document.createElement("a");
+        logoutBtn.textContent = "Logout";
+        logoutBtn.href = "#";
+        logoutBtn.className = "btn";
+        logoutBtn.style.marginLeft = "10px";
+        logoutBtn.onclick = e => {
+            e.preventDefault();
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.reload();
+        };
+        navLinks.appendChild(logoutBtn);
     }
-}*/
+}
 
+// ===== CARD REVEAL ANIMATION =====
+const cards = document.querySelectorAll(".card");
+function revealCards() {
+    const triggerBottom = window.innerHeight * 0.85;
+    cards.forEach(card => {
+        const cardTop = card.getBoundingClientRect().top;
+        if (cardTop < triggerBottom) {
+            card.classList.add("visible");
+        }
+    });
+}
 
+// Initialize card animations
+window.addEventListener("scroll", revealCards);
+window.addEventListener("load", revealCards);
 
+// ===== NAVBAR SCROLL EFFECT =====
+const navbar = document.querySelector(".navbar");
+window.addEventListener("scroll", () => {
+    if (navbar) {
+        navbar.style.background = window.scrollY > 50
+            ? "rgba(255, 255, 255, 0.9)"
+            : "rgba(255, 255, 255, 0.25)";
+    }
+});
 
+// ===== HERO BUTTON SCROLL =====
+const scrollBtn = document.querySelector(".hero .btn");
+if (scrollBtn) scrollBtn.addEventListener("click", () => {
+    document.querySelector("#collections").scrollIntoView({ behavior: "smooth" });
+});
 
+// ===== FILTER FUNCTIONALITY =====
+const filterButtons = document.querySelectorAll(".filter-btn");
 
+filterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        // Remove active class from all
+        filterButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
 
+        const category = btn.dataset.category;
 
+        cards.forEach(card => {
+            if (category === "all" || card.dataset.category === category) {
+                card.style.display = "block";
+                setTimeout(() => card.classList.add("visible"), 50);
+            } else {
+                card.style.display = "none";
+                card.classList.remove("visible");
+            }
+        });
+
+        // Smooth scroll to collections section
+        const collectionsSection = document.querySelector("#collections");
+        if (collectionsSection) {
+            collectionsSection.scrollIntoView({ behavior: "smooth" });
+        }
+    });
+});
+
+// ===== PERFORMANCE OPTIMIZATIONS =====
+// Throttle scroll events for better performance
+let scrollTimeout;
+window.addEventListener('scroll', () => {
+    if (!scrollTimeout) {
+        scrollTimeout = setTimeout(() => {
+            revealCards();
+            scrollTimeout = null;
+        }, 100);
+    }
+});
+
+console.log('👑 Royal Jewellery App Initialized Successfully');
