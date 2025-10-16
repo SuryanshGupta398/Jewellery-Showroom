@@ -188,7 +188,7 @@ class JewelleryDisplay {
         const product = products.find(p => p.id === productId);
         if (!product) return;
         
-        const modal = document.getElementById('productModal');
+        const modal = document.getElementById('closeModal');
         const productDetails = document.getElementById('productDetails');
         
         // Calculate base price per gram for gold items
@@ -1318,5 +1318,6 @@ window.addEventListener('scroll', () => {
 });
 
 console.log('👑 Royal Jewellery App Initialized Successfully');
+
 
 
