@@ -5,619 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prabhanjan Mragendra Jewellers PVT LTD</title>
+  <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background-color: #f9f9f9;
-    }
-
-    /* Header Styles */
-    header {
-      background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
-      color: white;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 5%;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .logo {
-      font-size: 1.8rem;
-      font-weight: 600;
-      color: #d4af37;
-    }
-
-    .nav-links {
-      display: flex;
-      list-style: none;
-      gap: 1.5rem;
-    }
-
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover {
-      color: #d4af37;
-    }
-
-    .marquee-container {
-      background: #d4af37;
-      color: #1a1a1a;
-      padding: 0.5rem 0;
-      overflow: hidden;
-    }
-
-    .marquee {
-      white-space: nowrap;
-      animation: marquee 20s linear infinite;
-    }
-
-    @keyframes marquee {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-
-    /* Hero Section */
-    .hero {
-      height: 80vh;
-      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                  url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: white;
-      position: relative;
-    }
-
-    .hero-content h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .hero-content p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      max-width: 600px;
-    }
-
-    .btn {
-      background: #d4af37;
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.3s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn:hover {
-      background: #b8941f;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Collections Section */
-    .collections {
-      padding: 5rem 5%;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: #1a1a1a;
-    }
-
-    .section-subtitle {
-      text-align: center;
-      color: #666;
-      margin-bottom: 3rem;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .filter-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 20px 0 40px;
-      flex-wrap: wrap;
-    }
-
-    .filter-btn {
-      padding: 10px 20px;
-      border: 1px solid #ddd;
-      background: #f9f9f9;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-weight: 500;
-    }
-
-    .filter-btn.active {
-      background: #d4af37;
-      color: white;
-      border-color: #d4af37;
-    }
-
-    .collection-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 25px;
-      margin-top: 30px;
-    }
-
-    .card {
-      position: relative;
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .card-badge {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: #d4af37;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      z-index: 1;
-    }
-
-    .card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      transition: transform 0.5s;
-    }
-
-    .card:hover img {
-      transform: scale(1.05);
-    }
-
-    .card-actions {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .card:hover .card-actions {
-      opacity: 1;
-    }
-
-    .action-btn {
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .action-btn:hover {
-      background: white;
-      transform: scale(1.1);
-    }
-
-    .card-info {
-      padding: 15px;
-    }
-
-    .card-info h3 {
-      margin: 0 0 10px;
-      font-size: 1.1rem;
-      color: #333;
-    }
-
-    .price {
-      font-weight: bold;
-      color: #d4af37;
-      font-size: 1.2rem;
-      margin: 10px 0;
-    }
-
-    .old-price {
-      text-decoration: line-through;
-      color: #999;
-      margin-right: 10px;
-      font-size: 1rem;
-    }
-
-    .quantity-control {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 10px 0;
-    }
-
-    .quantity-control button {
-      background: #f0f0f0;
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .quantity-control button:hover {
-      background: #e0e0e0;
-    }
-
-    .rating {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin: 10px 0;
-      color: #ffc107;
-    }
-
-    .rating span {
-      color: #666;
-      font-size: 0.9rem;
-    }
-
-    .details-btn {
-      background: #333;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 10px 0;
-      width: 100%;
-      transition: background 0.3s;
-    }
-
-    .details-btn:hover {
-      background: #555;
-    }
-
-    .add-to-cart {
-      width: 100%;
-      justify-content: center;
-    }
-
-    .load-more-container {
-      text-align: center;
-      margin: 50px 0 30px;
-    }
-
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      z-index: 1000;
-      overflow-y: auto;
-      padding: 20px;
-    }
-
-    .modal-content {
-      background-color: #fff;
-      margin: 2% auto;
-      padding: 30px;
-      width: 90%;
-      max-width: 1000px;
-      border-radius: 10px;
-      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
-      position: relative;
-      animation: modalFadeIn 0.3s ease-out;
-    }
-
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .close-modal {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 28px;
-      cursor: pointer;
-      color: #333;
-      transition: color 0.3s;
-    }
-
-    .close-modal:hover {
-      color: #d4af37;
-    }
-
-    .product-details {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-    }
-
-    .product-image {
-      flex: 1;
-      min-width: 300px;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: zoom-in;
-    }
-
-    .product-image img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      transition: transform 0.5s;
-    }
-
-    .product-image.zoomed img {
-      transform: scale(1.8);
-      cursor: zoom-out;
-    }
-
-    .product-info {
-      flex: 1;
-      min-width: 300px;
-    }
-
-    .product-info h2 {
-      font-size: 1.8rem;
-      margin-bottom: 10px;
-      color: #1a1a1a;
-    }
-
-    .product-info p {
-      color: #666;
-      margin-bottom: 20px;
-    }
-
-    .karat-selection, .weight-selection {
-      margin: 20px 0;
-    }
-
-    .karat-selection h4, .weight-selection h4 {
-      margin-bottom: 10px;
-      color: #333;
-    }
-
-    .karat-options, .weight-options {
-      display: flex;
-      gap: 10px;
-      margin-top: 8px;
-      flex-wrap: wrap;
-    }
-
-    .karat-btn, .weight-btn {
-      padding: 10px 15px;
-      border: 1px solid #ddd;
-      background: #f9f9f9;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-weight: 500;
-    }
-
-    .karat-btn.active, .weight-btn.active {
-      background: #d4af37;
-      color: white;
-      border-color: #d4af37;
-    }
-
-    .dynamic-price {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: #d4af37;
-      margin: 25px 0;
-      padding: 15px;
-      background: #f9f9f9;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .price-breakdown {
-      background: #f5f5f5;
-      padding: 15px;
-      border-radius: 8px;
-      margin: 20px 0;
-    }
-
-    .price-breakdown p {
-      margin: 8px 0;
-      font-size: 0.95rem;
-    }
-
-    /* Store Location */
-    .store-map {
-      padding: 5rem 5%;
-      background: #f5f5f5;
-      text-align: center;
-    }
-
-    .store-map h2 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: #1a1a1a;
-    }
-
-    .store-map p {
-      color: #666;
-      margin-bottom: 3rem;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .map-container {
-      max-width: 1000px;
-      margin: 0 auto;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .map-container iframe {
-      width: 100%;
-      display: block;
-    }
-
-    /* Footer */
-    footer {
-      background: #1a1a1a;
-      color: white;
-      padding: 50px 5% 20px;
-    }
-
-    .footer-content {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .footer-column h3 {
-      color: #d4af37;
-      margin-bottom: 20px;
-      font-size: 1.2rem;
-    }
-
-    .footer-links {
-      list-style: none;
-    }
-
-    .footer-links li {
-      margin-bottom: 10px;
-    }
-
-    .footer-links a {
-      color: #ccc;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    .footer-links a:hover {
-      color: #d4af37;
-    }
-
-    .footer-links i {
-      margin-right: 10px;
-      color: #d4af37;
-      width: 20px;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .social-links a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: #333;
-      border-radius: 50%;
-      color: white;
-      transition: all 0.3s;
-    }
-
-    .social-links a:hover {
-      background: #d4af37;
-      transform: translateY(-3px);
-    }
-
-    .copyright {
-      text-align: center;
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid #333;
-      color: #999;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .navbar {
-        flex-direction: column;
-        gap: 15px;
-      }
-      
-      .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      
-      .hero-content h1 {
-        font-size: 2rem;
-      }
-      
-      .section-title {
-        font-size: 2rem;
-      }
-      
-      .product-details {
-        flex-direction: column;
-      }
-      
-      .modal-content {
-        width: 95%;
-        padding: 20px;
-      }
-    }
-  </style>
 </head>
 
 <body>
@@ -645,47 +35,380 @@
 
   <!-- Hero Section -->
   <section id="home" class="hero">
+    <div class="floating-elements" id="floatingElements"></div>
     <div class="hero-content">
       <h1>Discover Timeless Beauty</h1>
       <p>Luxury handcrafted jewellery made to perfection. Each piece tells a story of elegance and craftsmanship.</p>
-      <button class="btn" id="exploreBtn"><i class="fas fa-gem"></i> Explore Collection</button>
+      <button class="btn"><i class="fas fa-gem"></i> Explore Collection</button>
     </div>
   </section>
-
   <!-- Collection Section -->
   <section id="collections" class="collections">
     <h2 class="section-title">Our Exquisite Collections</h2>
     <p class="section-subtitle">Discover our handcrafted jewellery pieces that celebrate elegance and craftsmanship</p>
 
-    <!-- Filter Buttons -->
+    <!-- ===== FILTER BUTTONS ===== -->
     <div class="filter-buttons">
       <button class="filter-btn active" data-category="all">All</button>
       <button class="filter-btn" data-category="rings">Rings</button>
       <button class="filter-btn" data-category="necklaces">Necklaces</button>
-      <button class="filter-btn" data-category="bracelets">Bracelets</button>
       <button class="filter-btn" data-category="earrings">Earrings</button>
     </div>
 
-    <div class="collection-grid" id="collectionGrid">
-      <!-- Products will be dynamically generated here -->
+
+    <div class="collection-grid">
+      <!-- Rings -->
+      <div class="card" data-category="rings" data-product-id="diamond-ring-001">
+        <div class="card-badge">Bestseller</div>
+        <img
+          src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Diamond Ring">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Eternal Diamond Ring</h3>
+          <p class="price">₹49,999</p>
+          <button class="details-btn">View Details</button>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <span>(128)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="card" data-category="rings" data-product-id="gold-ring-002">
+        <img
+          src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Gold Ring">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Golden Grace Ring</h3>
+          <p class="price">₹24,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class=" fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+            <span>(89)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="card" data-category="rings">
+        <div class="card-badge">New</div>
+        <img
+          src="https://images.unsplash.com/photo-1606065900592-56b7ceabe20f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Pearl Ring">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Pearl Elegance Ring</h3>
+          <p class="price">₹32,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <span>(64)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Necklaces -->
+      <div class="card" data-category="necklaces">
+        <img
+          src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Gold Necklace">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Royal Gold Necklace</h3>
+          <p class="price">₹89,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <span>(156)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="card" data-category="necklaces">
+        <div class="card-badge">Popular</div>
+        <img
+          src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Diamond Necklace">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Diamond Cascade</h3>
+          <p class="price">₹1,24,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <span>(203)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="card" data-category="necklaces">
+        <img
+          src="https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Pearl Necklace">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Pearl Strand Classic</h3>
+          <p class="price">₹45,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+            <span>(97)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Bracelets -->
+      <div class="card" data-category="bracelets">
+        <img
+          src="https://images.unsplash.com/photo-1588444650700-6c7f0c89d36b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Gold Bracelet">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Elegant Gold Bracelet</h3>
+          <p class="price">₹39,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <span>(142)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="card" data-category="bracelets">
+        <div class="card-badge">Sale</div>
+        <img
+          src="https://images.unsplash.com/photo-1551103786326-10dfeff6d7c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Diamond Bracelet">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Diamond Tennis Bracelet</h3>
+          <p class="price"><span class="old-price">₹75,999</span> ₹62,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+            <span>(78)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Earrings -->
+      <div class="card" data-category="earrings">
+        <img
+          src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Diamond Earrings">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Diamond Stud Earrings</h3>
+          <p class="price">₹28,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <span>(211)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="card" data-category="earrings">
+        <img
+          src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Gold Earrings">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Gold Hoop Earrings</h3>
+          <p class="price">₹19,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+            <span>(134)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="card" data-category="earrings">
+        <div class="card-badge">Limited</div>
+        <img
+          src="https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Pearl Earrings">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Pearl Drop Earrings</h3>
+          <p class="price">₹34,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <span>(89)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="card" data-category="bracelets">
+        <img
+          src="https://images.unsplash.com/photo-1584377334015-9c0c0138ac59?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+          alt="Silver Bracelet">
+        <div class="card-actions">
+          <button class="action-btn"><i class="fas fa-heart"></i></button>
+          <button class="action-btn"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="card-info">
+          <h3>Silver Charm Bracelet</h3>
+          <p class="price">₹22,999</p>
+          <div class="quantity-control">
+            <button class="decrease">-</button>
+            <span class="qty">1</span>
+            <button class="increase">+</button>
+          </div>
+          <div class="rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+            <span>(67)</span>
+          </div>
+          <button class="btn add-to-cart">Add to Cart</button>
+        </div>
+      </div>
     </div>
 
     <div class="load-more-container">
-      <button class="btn load-more" id="loadMoreBtn">Load More Jewellery</button>
+      <button class="btn load-more">Load More Jewellery</button>
     </div>
   </section>
-
-  <!-- Product Details Modal -->
-  <div class="modal" id="productModal">
-    <div class="modal-content">
-      <span class="close-modal" id="closeModal">&times;</span>
-      <div class="product-details" id="productDetails">
-        <!-- Product details will be dynamically inserted here -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Store Location Section -->
+  <!-- ===== STORE LOCATION SECTION ===== -->
   <section id="store-location" class="store-map">
     <h2>Find Our Store</h2>
     <p>Visit our showroom for exclusive jewellery collections</p>
@@ -693,7 +416,7 @@
     <div class="map-container">
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d918048.0575345628!2d77.933315278125!3d25.996715000000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3977cd01da08096d%3A0xcb48980c9d099681!2sPrabhanjan%20Jewellers!5e0!3m2!1sen!2sin!4v1760293893151!5m2!1sen!2sin"
-        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
         referrerpolicy="no-referrer-when-downgrade">
       </iframe>
     </div>
@@ -704,10 +427,13 @@
     <div class="footer-content">
       <div class="footer-column">
         <h3>Shimmer & Shine</h3>
-        <p>Crafting exquisite jewellery since 2010. Our mission is to bring elegance and beauty to your special moments.</p>
+        <p>Crafting exquisite jewellery since 2010. Our mission is to bring elegance and beauty to your special moments.
+        </p>
         <div class="social-links">
           <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://www.instagram.com/pmjewellerspvtltd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i class="fab fa-instagram"></i></a>
+          <a
+            href="https://www.instagram.com/pmjewellerspvtltd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i
+              class="fab fa-instagram"></i></a>
           <a href="#"><i class="fab fa-twitter"></i></a>
           <a href="#"><i class="fab fa-pinterest"></i></a>
         </div>
@@ -743,360 +469,12 @@
       </div>
     </div>
     <div class="copyright">
-      <p>© 2025 Prabhanjan Mragendra Jewellers PVT LTD | Crafted with ❤️ and Gold</p>
+      <p>© 2025 Shimmer & Shine | Crafted with ❤️ and Gold</p>
     </div>
   </footer>
 
-  <script src="script.js">
-    // Current gold prices in India (updated with correct rates)
-    const goldPrices = {
-      '24k': 13250,  // per gram (approx 24k price based on 22k)
-      '22k': 12135,  // per gram (current market rate)
-      '18k': 9920    // per gram (approx 18k price based on 22k)
-    };
-
-    // Sample product data - in a real application, this would come from a database
-    const products = [];
-    const categories = ['rings', 'necklaces', 'bracelets', 'earrings'];
-    const materials = ['Gold', 'Silver', 'Diamond', 'Pearl', 'Platinum'];
-    const designs = ['Classic', 'Modern', 'Vintage', 'Contemporary', 'Art Deco', 'Minimalist'];
-    
-    // Generate 50 products for each category
-    categories.forEach(category => {
-      for (let i = 1; i <= 50; i++) {
-        const material = materials[Math.floor(Math.random() * materials.length)];
-        const design = designs[Math.floor(Math.random() * designs.length)];
-        
-        // Calculate realistic base price based on material and weight
-        const weight = (Math.random() * 10 + 5).toFixed(2); // Weight between 5g and 15g
-        let basePrice;
-        
-        if (material === 'Gold') {
-          // For gold items, base price is calculated based on 22k gold rate
-          basePrice = Math.round(goldPrices['22k'] * weight * 1.2); // Adding 20% for making charges
-        } else if (material === 'Diamond') {
-          basePrice = Math.floor(Math.random() * 100000) + 50000; // Between 50,000 and 150,000
-        } else if (material === 'Platinum') {
-          basePrice = Math.floor(Math.random() * 80000) + 40000; // Between 40,000 and 120,000
-        } else {
-          basePrice = Math.floor(Math.random() * 30000) + 5000; // Between 5,000 and 35,000
-        }
-        
-        products.push({
-          id: `${category}-${i}`,
-          name: `${material} ${design} ${category.charAt(0).toUpperCase() + category.slice(1)}`,
-          category: category,
-          price: basePrice,
-          image: `https://images.unsplash.com/photo-${Math.floor(Math.random() * 10000000000)}?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80`,
-          description: `Exquisite ${material.toLowerCase()} ${category} with ${design.toLowerCase()} design. Handcrafted to perfection.`,
-          weight: weight,
-          karat: material === 'Gold' ? ['18k', '22k', '24k'] : null,
-          material: material,
-          rating: (Math.random() * 0.5 + 4.5).toFixed(1), // Rating between 4.5 and 5.0
-          reviewCount: Math.floor(Math.random() * 200) + 50, // Between 50 and 250 reviews
-          badge: Math.random() > 0.7 ? (Math.random() > 0.5 ? 'Bestseller' : 'New') : null,
-          makingCharges: 0.2 // 20% making charges
-        });
-      }
-    });
-
-    // DOM Elements
-    const collectionGrid = document.getElementById('collectionGrid');
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
-    const productModal = document.getElementById('productModal');
-    const closeModal = document.getElementById('closeModal');
-    const productDetails = document.getElementById('productDetails');
-    const exploreBtn = document.getElementById('exploreBtn');
-
-    // State variables
-    let currentCategory = 'all';
-    let displayedProducts = 12;
-    const productsPerLoad = 12;
-
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function() {
-      renderProducts();
-      setupEventListeners();
-    });
-
-    // Render products based on current category and displayed count
-    function renderProducts() {
-      collectionGrid.innerHTML = '';
-      
-      const filteredProducts = currentCategory === 'all' 
-        ? products 
-        : products.filter(product => product.category === currentCategory);
-      
-      const productsToShow = filteredProducts.slice(0, displayedProducts);
-      
-      productsToShow.forEach(product => {
-        const productCard = createProductCard(product);
-        collectionGrid.appendChild(productCard);
-      });
-      
-      // Show/hide load more button
-      if (displayedProducts >= filteredProducts.length) {
-        loadMoreBtn.style.display = 'none';
-      } else {
-        loadMoreBtn.style.display = 'block';
-      }
-    }
-
-    // Create a product card element
-    function createProductCard(product) {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.setAttribute('data-category', product.category);
-      card.setAttribute('data-product-id', product.id);
-      
-      let badgeHTML = '';
-      if (product.badge) {
-        badgeHTML = `<div class="card-badge">${product.badge}</div>`;
-      }
-      
-      card.innerHTML = `
-        ${badgeHTML}
-        <img src="${product.image}" alt="${product.name}">
-        <div class="card-actions">
-          <button class="action-btn"><i class="fas fa-heart"></i></button>
-          <button class="action-btn view-details-btn"><i class="fas fa-eye"></i></button>
-        </div>
-        <div class="card-info">
-          <h3>${product.name}</h3>
-          <p class="price">₹${product.price.toLocaleString()}</p>
-          <button class="details-btn" data-product-id="${product.id}">View Details</button>
-          <div class="quantity-control">
-            <button class="decrease">-</button>
-            <span class="qty">1</span>
-            <button class="increase">+</button>
-          </div>
-          <div class="rating">
-            ${generateStarRating(product.rating)}
-            <span>(${product.reviewCount})</span>
-          </div>
-          <button class="btn add-to-cart">Add to Cart</button>
-        </div>
-      `;
-      
-      // Add event listener to view details button
-      const detailsBtn = card.querySelector('.details-btn');
-      detailsBtn.addEventListener('click', () => showProductDetails(product.id));
-      
-      // Add event listener to eye icon
-      const viewDetailsBtn = card.querySelector('.view-details-btn');
-      viewDetailsBtn.addEventListener('click', () => showProductDetails(product.id));
-      
-      // Add quantity control functionality
-      const decreaseBtn = card.querySelector('.decrease');
-      const increaseBtn = card.querySelector('.increase');
-      const qtySpan = card.querySelector('.qty');
-      
-      decreaseBtn.addEventListener('click', () => {
-        let qty = parseInt(qtySpan.textContent);
-        if (qty > 1) {
-          qtySpan.textContent = qty - 1;
-        }
-      });
-      
-      increaseBtn.addEventListener('click', () => {
-        let qty = parseInt(qtySpan.textContent);
-        qtySpan.textContent = qty + 1;
-      });
-      
-      return card;
-    }
-
-    // Generate star rating HTML
-    function generateStarRating(rating) {
-      const fullStars = Math.floor(rating);
-      const hasHalfStar = rating % 1 !== 0;
-      let starsHTML = '';
-      
-      for (let i = 0; i < fullStars; i++) {
-        starsHTML += '<i class="fas fa-star"></i>';
-      }
-      
-      if (hasHalfStar) {
-        starsHTML += '<i class="fas fa-star-half-alt"></i>';
-      }
-      
-      const emptyStars = 5 - Math.ceil(rating);
-      for (let i = 0; i < emptyStars; i++) {
-        starsHTML += '<i class="far fa-star"></i>';
-      }
-      
-      return starsHTML;
-    }
-
-    // Show product details in modal
-    function showProductDetails(productId) {
-      const product = products.find(p => p.id === productId);
-      if (!product) return;
-      
-      // Calculate base price per gram for gold items
-      const basePricePerGram = product.material === 'Gold' ? 
-        (product.price / (1 + product.makingCharges)) / parseFloat(product.weight) : 0;
-      
-      productDetails.innerHTML = `
-        <div class="product-image" id="productImage">
-          <img src="${product.image}" alt="${product.name}">
-        </div>
-        <div class="product-info">
-          <h2>${product.name}</h2>
-          <p>${product.description}</p>
-          <p><strong>Material:</strong> ${product.material}</p>
-          <p><strong>Weight:</strong> ${product.weight} grams</p>
-          
-          ${product.karat ? `
-          <div class="karat-selection">
-            <h4>Select Gold Purity:</h4>
-            <div class="karat-options">
-              <button class="karat-btn" data-karat="18k">18K Gold</button>
-              <button class="karat-btn active" data-karat="22k">22K Gold</button>
-              <button class="karat-btn" data-karat="24k">24K Gold</button>
-            </div>
-            <p><small>Current Gold Rate: 22K - ₹${goldPrices['22k'].toLocaleString()}/gm | 18K - ₹${goldPrices['18k'].toLocaleString()}/gm | 24K - ₹${goldPrices['24k'].toLocaleString()}/gm</small></p>
-          </div>
-          ` : ''}
-          
-          <div class="weight-selection">
-            <h4>Select Weight (grams):</h4>
-            <div class="weight-options">
-              <button class="weight-btn active" data-weight="${product.weight}">${product.weight}g (Standard)</button>
-              <button class="weight-btn" data-weight="${(parseFloat(product.weight) * 1.5).toFixed(2)}">${(parseFloat(product.weight) * 1.5).toFixed(2)}g</button>
-              <button class="weight-btn" data-weight="${(parseFloat(product.weight) * 2).toFixed(2)}">${(parseFloat(product.weight) * 2).toFixed(2)}g</button>
-            </div>
-          </div>
-          
-          <div class="dynamic-price">
-            Final Price: ₹<span id="finalPrice">${product.price.toLocaleString()}</span>
-          </div>
-          
-          <div class="price-breakdown">
-            <p>Base Price (${product.weight}g): ₹${Math.round(product.price / (1 + product.makingCharges)).toLocaleString()}</p>
-            ${product.karat ? '<p id="karatAdjustment">Karat Adjustment: ₹0</p>' : ''}
-            <p id="weightAdjustment">Weight Adjustment: ₹0</p>
-            <p>Making Charges (20%): ₹${Math.round(product.price * product.makingCharges).toLocaleString()}</p>
-          </div>
-          
-          <div class="rating">
-            ${generateStarRating(product.rating)}
-            <span>(${product.reviewCount} reviews)</span>
-          </div>
-          
-          <button class="btn add-to-cart" style="width: 100%; margin-top: 20px;">
-            <i class="fas fa-shopping-cart"></i> Add to Cart
-          </button>
-        </div>
-      `;
-      
-      // Set up event listeners for karat and weight selection
-      if (product.karat) {
-        const karatBtns = productDetails.querySelectorAll('.karat-btn');
-        karatBtns.forEach(btn => {
-          btn.addEventListener('click', () => {
-            karatBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            updatePrice(product, basePricePerGram);
-          });
-        });
-      }
-      
-      const weightBtns = productDetails.querySelectorAll('.weight-btn');
-      weightBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          weightBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          updatePrice(product, basePricePerGram);
-        });
-      });
-      
-      // Set up image zoom functionality
-      const productImage = document.getElementById('productImage');
-      productImage.addEventListener('click', function() {
-        this.classList.toggle('zoomed');
-      });
-      
-      // Show the modal
-      productModal.style.display = 'block';
-    }
-
-    // Update price based on selected karat and weight
-    function updatePrice(product, basePricePerGram) {
-      const selectedKarat = product.karat ? 
-        productDetails.querySelector('.karat-btn.active').getAttribute('data-karat') : null;
-      const selectedWeight = parseFloat(
-        productDetails.querySelector('.weight-btn.active').getAttribute('data-weight')
-      );
-      
-      let finalPrice;
-      
-      if (product.material === 'Gold') {
-        // For gold items, calculate based on gold rate
-        const goldValue = goldPrices[selectedKarat] * selectedWeight;
-        const makingCharges = goldValue * product.makingCharges;
-        finalPrice = goldValue + makingCharges;
-      } else {
-        // For non-gold items, calculate based on weight multiplier
-        const weightMultiplier = selectedWeight / parseFloat(product.weight);
-        finalPrice = product.price * weightMultiplier;
-      }
-      
-      // Calculate adjustments
-      const karatAdjustment = product.karat ? 
-        finalPrice - (product.price * (selectedWeight / parseFloat(product.weight))) : 0;
-      
-      const weightAdjustment = finalPrice - product.price;
-      
-      // Update display
-      document.getElementById('finalPrice').textContent = Math.round(finalPrice).toLocaleString();
-      
-      if (product.karat) {
-        document.getElementById('karatAdjustment').textContent = 
-          `Karat Adjustment: ₹${Math.round(karatAdjustment).toLocaleString()}`;
-      }
-      
-      document.getElementById('weightAdjustment').textContent = 
-        `Weight Adjustment: ₹${Math.round(weightAdjustment).toLocaleString()}`;
-    }
-
-    // Set up event listeners
-    function setupEventListeners() {
-      // Filter buttons
-      filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          filterButtons.forEach(btn => btn.classList.remove('active'));
-          button.classList.add('active');
-          currentCategory = button.getAttribute('data-category');
-          displayedProducts = 12;
-          renderProducts();
-        });
-      });
-      
-      // Load more button
-      loadMoreBtn.addEventListener('click', () => {
-        displayedProducts += productsPerLoad;
-        renderProducts();
-      });
-      
-      // Explore button
-      exploreBtn.addEventListener('click', () => {
-        document.getElementById('collections').scrollIntoView({ behavior: 'smooth' });
-      });
-      
-      // Close modal
-      closeModal.addEventListener('click', () => {
-        productModal.style.display = 'none';
-      });
-      
-      // Close modal when clicking outside
-      window.addEventListener('click', (event) => {
-        if (event.target === productModal) {
-          productModal.style.display = 'none';
-        }
-      });
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
+
+
 </html>
