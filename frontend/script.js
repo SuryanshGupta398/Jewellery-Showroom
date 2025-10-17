@@ -684,7 +684,7 @@ const products = [
         category: 'rings',
         price: 45000,
         oldPrice: 52000,
-        image: 'https://github.com/SuryanshGupta398/Jewellery-Showroom/blob/main/frontend/ChatGPT%20Image%20Oct%2017%2C%202025%2C%2012_05_29%20PM.png',
+        image: 'ChatGPT Image Oct 17, 2025, 12_05_29 PM.png',
         description: 'Exquisite diamond ring with premium gold setting.',
         material: 'Gold',
         purities: ['18K', '22K', '24K'],
@@ -2171,4 +2171,5 @@ if (loginBtnNav) loginBtnNav.style.display = "none";
 
   console.log("👑 Royal Jewellery App Initialized Successfully");
 });
+
 
