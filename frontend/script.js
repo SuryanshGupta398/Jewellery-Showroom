@@ -946,11 +946,17 @@ const products = [
         id: 'bracelet-1',
         name: 'Diamond Tennis Bracelet',
         category: 'bracelets',
-        price: 85000,
-        oldPrice: 95000,
-        image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400',
+        price: 282000,
+        oldPrice: 276000,
+        image: 'WhatsApp Image 2025-10-18 at 02.05.08_2b08b230.jpg',
         description: 'Classic diamond tennis bracelet for elegant wear.',
-        material: '18K Gold',
+        material: 'Gold',
+        purities: ['18K', '22K', '24K'],
+        purityPrices: {
+            '18K': -5000,
+            '22K': 0,
+            '24K': 8000
+        },
         weight: '22.5g',
         stone: 'Diamond',
         stoneWeight: '3.8ct',
@@ -964,10 +970,16 @@ const products = [
         id: 'bracelet-2',
         name: 'Gold Chain Bracelet',
         category: 'bracelets',
-        price: 32000,
-        image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400',
+        price: 230000,
+        image: 'WhatsApp Image 2025-10-18 at 02.01.42_3cdd83a2.jpg',
         description: 'Simple and elegant gold chain bracelet.',
-        material: '22K Gold',
+        material: 'Gold',
+        purities: ['18K', '22K', '24K'],
+        purityPrices: {
+            '18K': -5000,
+            '22K': 0,
+            '24K': 8000
+        },
         weight: '18.7g',
         makingCharges: '12%',
         warranty: '1 Year',
@@ -1073,11 +1085,17 @@ const products = [
         id: 'earring-1',
         name: 'Diamond Stud Earrings',
         category: 'earrings',
-        price: 45000,
-        oldPrice: 52000,
-        image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400',
+        price: 105000,
+        oldPrice: 100000,
+        image: 'WhatsApp Image 2025-10-18 at 02.06.19_bf1aa984.jpg',
         description: 'Classic diamond stud earrings for everyday elegance.',
-        material: '18K Gold',
+        material: 'Gold',
+        purities: ['18K', '22K', '24K'],
+        purityPrices: {
+            '18K': -5000,
+            '22K': 0,
+            '24K': 8000
+        },
         weight: '8.2g',
         stone: 'Diamond',
         stoneWeight: '2.0ct',
@@ -1091,10 +1109,16 @@ const products = [
         id: 'earring-2',
         name: 'Gold Jhumka Earrings',
         category: 'earrings',
-        price: 32000,
-        image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400',
+        price: 153000,
+        image: 'WhatsApp Image 2025-10-18 at 02.07.21_c3233114.jpg',
         description: 'Traditional Indian jhumka earrings.',
-        material: '22K Gold',
+        material: 'Gold',
+        purities: ['18K', '22K', '24K'],
+        purityPrices: {
+            '18K': -5000,
+            '22K': 0,
+            '24K': 8000
+        },
         weight: '12.5g',
         makingCharges: '18%',
         warranty: '1 Year',
@@ -1544,14 +1568,6 @@ selectPurity(productId, purity) {
                         <span class="spec-value">${product.stoneWeight}</span>
                     </div>
                     ` : ''}
-                    <div class="spec-item">
-                        <span class="spec-label">Making Charges:</span>
-                        <span class="spec-value">${product.makingCharges || '15%'}</span>
-                    </div>
-                    <div class="spec-item">
-                        <span class="spec-label">Warranty:</span>
-                        <span class="spec-value">${product.warranty || '1 Year'}</span>
-                    </div>
                 </div>
             </div>
             
@@ -2195,6 +2211,7 @@ if (loginBtnNav) loginBtnNav.style.display = "none";
 
   console.log("👑 Royal Jewellery App Initialized Successfully");
 });
+
 
 
 
