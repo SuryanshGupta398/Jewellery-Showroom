@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prabhanjan Mragendra Jewellers PVT LTD</title>
-  <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
   <!-- Navbar -->
   <header>
@@ -21,7 +19,7 @@
         <li><a href="pricecalc.html">Price Calculator</a></li>
         <li><a href="https://maps.app.goo.gl/CRatyBnAKfWjWWHp8">Location</a></li>
         <li><a href="about.html">About</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="contact.html">Contact</a></li>
         <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
         <li><a href="login.html" id="loginbtn" class="btn"><i class="fas fa-user"></i> Login</a></li>
       </ul>
@@ -35,7 +33,6 @@
 
   <!-- Hero Section -->
   <section id="home" class="hero">
-    <div class="floating-elements" id="floatingElements"></div>
     <div class="hero-content">
       <h1>Discover Timeless Beauty</h1>
       <p>Luxury handcrafted jewellery made to perfection. Each piece tells a story of elegance and craftsmanship.</p>
@@ -57,7 +54,7 @@
       <button class="filter-btn" data-category="earrings">Earrings</button>
     </div>
 
-    <div id="jewelleryContainer" class="cards-grid">
+    <div class="collection-grid" id="collectionGrid">
       <!-- Products will be dynamically generated here -->
     </div>
 
@@ -67,10 +64,10 @@
   </section>
 
   <!-- Product Details Modal -->
-  <div class="modal" id="productModal">
-    <div class="modal-content">
+  <div class="product-modal" id="productModal">
+    <div class="product-modal-content">
       <span class="close-modal" id="closeModal">&times;</span>
-      <div class="product-details" id="productDetails">
+      <div class="product-details-container" id="productDetails">
         <!-- Product details will be dynamically inserted here -->
       </div>
     </div>
@@ -109,7 +106,7 @@
           <li><a href="#home">Home</a></li>
           <li><a href="#collections">Collections</a></li>
           <li><a href="about.html">About Us</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="contact.html">Contact</a></li>
           <li><a href="terms.html">Terms</a></li>
           <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
@@ -134,14 +131,10 @@
       </div>
     </div>
     <div class="copyright">
-      <p>© 2025 Shimmer & Shine | Crafted with ❤️ and Gold</p>
+      <p>© 2025 Prabhanjan Mragendra Jewellers PVT LTD | Crafted with ❤️ and Gold</p>
     </div>
   </footer>
 
   <script src="script.js"></script>
 </body>
-
-
 </html>
-
-
