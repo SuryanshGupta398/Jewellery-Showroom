@@ -1,3 +1,4 @@
+// ===== IMPORTS =====
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -8,25 +9,22 @@ const app = express();
 app.use(cors({
   origin: [
     "https://jewellery-showroom-4svb.vercel.app",
-    "http://localhost:3000",       // for Live Server
-    "http://127.0.0.1:5500",       // fallback
+    "http://localhost:3000",
+    "http://127.0.0.1:5500"
   ],
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"]
 }));
- // allow all origins (you can restrict to your domain later)
-app.use(express.json()); // parse JSON body
+
+app.use(express.json()); // Parse incoming JSON requests
 
 // ===== MONGODB CONNECTION =====
-const mongoURI = process.env.MONGODB_URI;
+const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/jewelleryDB";
 
-if (!mongoURI) {
-  console.error("❌ MONGODB_URI not set in environment variables");
-  process.exit(1);
-}
-
-mongoose
-  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
@@ -41,22 +39,19 @@ const userSchema = new mongoose.Schema({
       name: String,
       price: Number,
       quantity: { type: Number, default: 1 },
-      image: String
-    }
-  ]
+      image: String,
+    },
+  ],
 });
 
 const User = mongoose.model("grahak", userSchema);
 
 // ===== ROUTES =====
 
-// 🧩 Register new user
+// 🧩 REGISTER USER
 app.post("/api/register", async (req, res) => {
   try {
     const { name, phone, address } = req.body;
-
-    console.log("Register request body:", req.body);
-
     if (!name || !phone || !address) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -67,9 +62,8 @@ app.post("/api/register", async (req, res) => {
     }
 
     const newUser = new User({ name, phone, address });
-    const savedUser = await newUser.save();
+    await newUser.save();
 
-    console.log("Saved user:", savedUser);
     res.status(201).json({ message: "User registered successfully!" });
   } catch (err) {
     console.error("❌ Registration error:", err);
@@ -77,7 +71,7 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// 🔍 Login route (check if phone exists)
+// 🔍 LOGIN CHECK (by phone)
 app.get("/api/login", async (req, res) => {
   try {
     const { phone } = req.query;
@@ -86,29 +80,28 @@ app.get("/api/login", async (req, res) => {
     const user = await User.findOne({ phone });
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Send user data (no sensitive info)
     res.json({ name: user.name, phone: user.phone });
   } catch (err) {
-    console.error(err);
+    console.error("❌ Login error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
+
+// 👥 GET ALL USERS (admin/test)
 app.get("/api/users", async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
   } catch (err) {
-    console.error(err);
+    console.error("❌ Fetch users error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
-// 🛍️ Add item to user's cart
-// 🛍️ Add item to user's cart (or increase quantity)
+// 🛍️ ADD TO CART
 app.post("/api/cart/add", async (req, res) => {
   try {
     const { phone, product } = req.body;
-
     if (!phone || !product) {
       return res.status(400).json({ message: "Phone and product are required" });
     }
@@ -116,11 +109,9 @@ app.post("/api/cart/add", async (req, res) => {
     const user = await User.findOne({ phone });
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Check if product already exists
     const existingItem = user.cart.find(item => item.productId === product.productId);
-
     if (existingItem) {
-      existingItem.quantity += product.quantity || 1; // increment quantity
+      existingItem.quantity += product.quantity || 1;
     } else {
       user.cart.push({ ...product, quantity: product.quantity || 1 });
     }
@@ -133,7 +124,7 @@ app.post("/api/cart/add", async (req, res) => {
   }
 });
 
-// 🧾 Get user's cart
+// 🧾 GET CART
 app.get("/api/cart", async (req, res) => {
   try {
     const { phone } = req.query;
@@ -149,11 +140,10 @@ app.get("/api/cart", async (req, res) => {
   }
 });
 
-// 🗑️ Remove item from cart
+// 🗑️ REMOVE FROM CART
 app.post("/api/cart/remove", async (req, res) => {
   try {
     const { phone, productId } = req.body;
-
     if (!phone || !productId) {
       return res.status(400).json({ message: "Phone and productId are required" });
     }
@@ -171,13 +161,12 @@ app.post("/api/cart/remove", async (req, res) => {
   }
 });
 
-// 🔢 Update quantity
+// 🔢 UPDATE CART QUANTITY
 app.post("/api/cart/update", async (req, res) => {
   try {
     const { phone, productId, quantity } = req.body;
-
     if (!phone || !productId || quantity == null) {
-      return res.status(400).json({ message: "Phone, productId and quantity are required" });
+      return res.status(400).json({ message: "Phone, productId, and quantity are required" });
     }
 
     const user = await User.findOne({ phone });
@@ -200,11 +189,11 @@ app.post("/api/cart/update", async (req, res) => {
   }
 });
 
-// 🔧 Test route
+// 🧠 TEST ROUTE
 app.get("/", (req, res) => {
-  res.send("✅ Backend running successfully");
+  res.send("✅ Jewellery Backend running successfully");
 });
 
-// ===== SERVER LISTEN =====
+// ===== SERVER START =====
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
