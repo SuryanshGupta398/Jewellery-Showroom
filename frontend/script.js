@@ -682,8 +682,8 @@ const products = [
         id: 'ring-1',
         name: 'Royal Diamond Ring',
         category: 'rings',
-        price: 45000,
-        oldPrice: 52000,
+        price: 270000,
+        oldPrice: 250000,
         image: 'ChatGPT Image Oct 17, 2025, 12_05_29 PM.png',
         description: 'Exquisite diamond ring with premium gold setting.',
         material: 'Gold',
@@ -706,15 +706,21 @@ const products = [
         id: 'ring-2',
         name: 'Elegant Emerald Ring',
         category: 'rings',
-        price: 38000,
-        oldPrice: 45000,
-        image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400',
+        price: 92000,
+        oldPrice: 88000,
+        image: 'ChatGPT Image Oct 18, 2025, 01_39_39 AM.png',
         images: [
             'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400',
             'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400'
         ],
         description: 'Beautiful emerald ring with intricate gold work. A timeless piece for the modern woman.',
-        material: '18K Gold',
+        material: 'Gold',
+        purities: ['18K', '22K', '24K'],
+        purityPrices: {
+            '18K': -5000,
+            '22K': 0,
+            '24K': 8000
+        },
         weight: '7.2g',
         stone: 'Emerald',
         stoneWeight: '2.5ct',
@@ -727,10 +733,16 @@ const products = [
         id: 'ring-3',
         name: 'Classic Gold Band',
         category: 'rings',
-        price: 25000,
+        price: 87611,
         image: 'eb528f17-564f-41bd-90cc-3557537678c8.png',
         description: 'Simple yet elegant gold band for daily wear. Crafted with precision and care.',
-        material: '24K Gold',
+        material: 'Gold',
+        purities: ['18K', '22K', '24K'],
+        purityPrices: {
+            '18K': -5000,
+            '22K': 0,
+            '24K': 8000
+        },
         weight: '6.8g',
         makingCharges: '10%',
         warranty: 'Lifetime',
@@ -741,11 +753,17 @@ const products = [
         id: 'ring-4',
         name: 'Ruby Cluster Ring',
         category: 'rings',
-        price: 52000,
-        oldPrice: 58000,
-        image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400',
+        price: 170000,
+        oldPrice: 150000,
+        image: 'ChatGPT Image Oct 18, 2025, 01_45_59 AM.png',
         description: 'Stunning ruby cluster ring with diamond accents. A statement piece for special events.',
-        material: '22K Gold',
+        material: 'Gold',
+        purities: ['18K', '22K', '24K'],
+        purityPrices: {
+            '18K': -5000,
+            '22K': 0,
+            '24K': 8000
+        },
         weight: '9.2g',
         stone: 'Ruby & Diamond',
         stoneWeight: '3.1ct',
@@ -793,11 +811,17 @@ const products = [
         id: 'necklace-1',
         name: 'Diamond Choker Necklace',
         category: 'necklaces',
-        price: 125000,
-        oldPrice: 145000,
-        image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400',
+        price: 565000,
+        oldPrice: 555000,
+        image: 'ChatGPT Image Oct 18, 2025, 01_48_28 AM.png',
         description: 'Stunning diamond choker necklace for grand occasions.',
-        material: '22K Gold',
+        material: 'Gold',
+        purities: ['18K', '22K', '24K'],
+        purityPrices: {
+            '18K': -5000,
+            '22K': 0,
+            '24K': 8000
+        },
         weight: '45.2g',
         stone: 'Diamond',
         stoneWeight: '8.5ct',
@@ -2171,6 +2195,7 @@ if (loginBtnNav) loginBtnNav.style.display = "none";
 
   console.log("👑 Royal Jewellery App Initialized Successfully");
 });
+
 
 
 
