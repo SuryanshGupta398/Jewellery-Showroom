@@ -728,7 +728,7 @@ const products = [
         name: 'Classic Gold Band',
         category: 'rings',
         price: 25000,
-        image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400',
+        image: 'eb528f17-564f-41bd-90cc-3557537678c8.png',
         description: 'Simple yet elegant gold band for daily wear. Crafted with precision and care.',
         material: '24K Gold',
         weight: '6.8g',
@@ -2171,5 +2171,6 @@ if (loginBtnNav) loginBtnNav.style.display = "none";
 
   console.log("👑 Royal Jewellery App Initialized Successfully");
 });
+
 
 
