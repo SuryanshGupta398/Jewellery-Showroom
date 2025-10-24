@@ -473,7 +473,7 @@
 
       async function loadCart() {
         try {
-          const res = await fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${encodeURIComponent(userPhone)}`);
+          const res = await fetch(`https://jewellery-website-mongodburi.up.railway.app/api/cart?phone=${encodeURIComponent(userPhone)}`);
           const data = await res.json();
 
           if (!data.cart || data.cart.length === 0) {
@@ -532,7 +532,7 @@
             btn.addEventListener("click", async (e) => {
               const productId = e.currentTarget.dataset.id;
               try {
-                await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/remove", {
+                await fetch("https://jewellery-website-mongodburi.up.railway.app/api/cart/remove", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ phone: userPhone, productId }),
@@ -553,7 +553,7 @@
               let newQty = parseInt(qtySpan.textContent) + 1;
 
               try {
-                await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/update", {
+                await fetch("https://jewellery-website-mongodburi.up.railway.app/api/cart/update", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ phone: userPhone, productId, quantity: newQty }),
@@ -578,7 +578,7 @@
               }
 
               try {
-                await fetch("https://jewellery-website-5xi0.onrender.com/api/cart/update", {
+                await fetch("https://jewellery-website-mongodburi.up.railway.app/api/cart/update", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ phone: userPhone, productId, quantity: newQty }),
@@ -609,7 +609,7 @@
     }
 
     try {
-      const res = await fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${encodeURIComponent(userPhone)}`);
+      const res = await fetch(`https://jewellery-website-mongodburi.up.railway.app/api/cart?phone=${encodeURIComponent(userPhone)}`);
       const data = await res.json();
 
       if (!data.cart || data.cart.length === 0) {
@@ -630,5 +630,6 @@
     });
   </script>
 </body>
+
 
 </html>
