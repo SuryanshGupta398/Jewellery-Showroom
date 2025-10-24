@@ -1,236 +1,3 @@
-// ===== FESTIVAL ANIMATION SEQUENCE =====
-class FestivalAnimation {
-    constructor() {
-        this.festivalDuration = 5000; // 5 seconds
-        this.init();
-    }
-
-    init() {
-        const isHomePage = this.isHomePage();
-        const festivalShown = sessionStorage.getItem('festivalAnimationShown');
-        const showAgain = new URLSearchParams(window.location.search).get('showAnimation') === 'true';
-        const forceShow = localStorage.getItem('forceShowAnimation') === 'true';
-
-        if (isHomePage && (!festivalShown || showAgain || forceShow)) {
-            this.showFestivalAnimation();
-        } else {
-            this.skipToRoyalAnimation();
-        }
-    }
-
-    isHomePage() {
-        return window.location.pathname.endsWith('index.html') ||
-            window.location.pathname.endsWith('/') ||
-            (document.querySelector('.hero') !== null &&
-                !window.location.pathname.includes('login.html') &&
-                !window.location.pathname.includes('register.html'));
-    }
-
-    showFestivalAnimation() {
-        console.log('🎆 Starting festival animation');
-
-        // Create festival overlay
-        const overlay = this.createFestivalOverlay();
-        document.body.appendChild(overlay);
-
-        // Start festival animations
-        this.createFestivalFirecrackers();
-        this.createFestivalFloatingElements();
-
-        // After festival duration, show royal animation
-        setTimeout(() => {
-            this.showRoyalAnimation();
-        }, this.festivalDuration);
-    }
-
-    createFestivalOverlay() {
-        const overlay = document.createElement('div');
-        overlay.className = 'festival-animation-overlay';
-        overlay.id = 'festivalAnimation';
-
-        overlay.innerHTML = `
-            <div class="festival-container" id="festivalContainer">
-                <!-- Festival Background Elements -->
-                <div class="festival-floating-rangoli"></div>
-                <div class="festival-floating-rangoli"></div>
-                <div class="festival-floating-rangoli"></div>
-                <div class="festival-floating-rangoli"></div>
-                
-                <!-- Festive Text -->
-                <div class="festival-text">
-                    <h2>Happy Dhanteras & Diwali</h2>
-                    <p>Illuminate Your Festivities with Our Premium Jewelry</p>
-                </div>
-                
-                <!-- Multiple Diyas -->
-                <div class="diya-container">
-                    <div class="diya">
-                        <div class="diya-body"></div>
-                        <div class="flame"></div>
-                    </div>
-                    <div class="diya">
-                        <div class="diya-body"></div>
-                        <div class="flame"></div>
-                    </div>
-                    <div class="diya">
-                        <div class="diya-body"></div>
-                        <div class="flame"></div>
-                    </div>
-                    <div class="diya">
-                        <div class="diya-body"></div>
-                        <div class="flame"></div>
-                    </div>
-                    <div class="diya">
-                        <div class="diya-body"></div>
-                        <div class="flame"></div>
-                    </div>
-                </div>
-                
-                <!-- Jewelry Showcase -->
-                <div class="jewelry-showcase">
-                    <div class="necklace">
-                        <div class="pendant"></div>
-                        <div class="diamond"></div>
-                        <div class="diamond"></div>
-                        <div class="diamond"></div>
-                        <div class="diamond"></div>
-                        <div class="diamond"></div>
-                        <div class="diamond"></div>
-                        <div class="diamond"></div>
-                    </div>
-                </div>
-
-                <!-- Skip Button -->
-                <button class="festival-skip-btn" id="festivalSkipBtn">
-                    Skip to Royal Boutique
-                </button>
-            </div>
-        `;
-
-        // Add skip button event listener
-        const skipBtn = overlay.querySelector('#festivalSkipBtn');
-        skipBtn.addEventListener('click', () => {
-            this.showRoyalAnimation();
-        });
-
-        return overlay;
-    }
-
-    createFestivalFirecrackers() {
-        const container = document.getElementById('festivalContainer');
-        if (!container) return;
-
-        for (let i = 0; i < 8; i++) {
-            setTimeout(() => {
-                const firecracker = document.createElement('div');
-                firecracker.className = 'firecracker';
-                
-                const leftPos = Math.random() * 80 + 10;
-                firecracker.style.left = `${leftPos}%`;
-                
-                container.appendChild(firecracker);
-                
-                setTimeout(() => {
-                    firecracker.style.transition = 'all 0.5s ease-out';
-                    firecracker.style.transform = 'translateY(-150px)';
-                    
-                    setTimeout(() => {
-                        this.createFestivalSparks(leftPos, 150);
-                        firecracker.remove();
-                    }, 500);
-                }, 100);
-            }, i * 600);
-        }
-    }
-
-    createFestivalSparks(x, y) {
-        const container = document.getElementById('festivalContainer');
-        const sparkCount = 20;
-        
-        for (let i = 0; i < sparkCount; i++) {
-            const spark = document.createElement('div');
-            spark.className = 'spark';
-            
-            const angle = Math.random() * Math.PI * 2;
-            const distance = Math.random() * 80 + 40;
-            const duration = Math.random() * 800 + 400;
-            
-            spark.style.left = `${x}%`;
-            spark.style.top = `${y}px`;
-            
-            container.appendChild(spark);
-            
-            setTimeout(() => {
-                spark.style.opacity = '1';
-                spark.style.transition = `all ${duration}ms ease-out`;
-                spark.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
-                spark.style.opacity = '0';
-                
-                setTimeout(() => {
-                    spark.remove();
-                }, duration);
-            }, 10);
-        }
-    }
-
-    createFestivalFloatingElements() {
-        const container = document.getElementById('festivalContainer');
-        setInterval(() => {
-            const element = document.createElement('div');
-            element.style.position = 'absolute';
-            element.style.width = '6px';
-            element.style.height = '6px';
-            element.style.background = '#ffd700';
-            element.style.borderRadius = '50%';
-            element.style.boxShadow = '0 0 8px #ffd700';
-            element.style.opacity = '0.7';
-            
-            element.style.left = `${Math.random() * 100}%`;
-            element.style.bottom = '0';
-            
-            container.appendChild(element);
-            
-            setTimeout(() => {
-                element.style.transition = 'all 3s ease-in';
-                element.style.transform = 'translateY(-400px)';
-                element.style.opacity = '0';
-                
-                setTimeout(() => {
-                    element.remove();
-                }, 3000);
-            }, 10);
-        }, 400);
-    }
-
-    showRoyalAnimation() {
-        console.log('👑 Transitioning to royal animation');
-        
-        // Hide festival animation
-        const festivalAnimation = document.getElementById('festivalAnimation');
-        if (festivalAnimation) {
-            festivalAnimation.classList.add('exiting');
-            
-            setTimeout(() => {
-                festivalAnimation.remove();
-                // Mark festival as shown
-                sessionStorage.setItem('festivalAnimationShown', 'true');
-                
-                // Initialize royal animation
-                new RoyalAnimation();
-            }, 800);
-        } else {
-            this.skipToRoyalAnimation();
-        }
-    }
-
-    skipToRoyalAnimation() {
-        console.log('⚡ Skipping to royal animation');
-        sessionStorage.setItem('festivalAnimationShown', 'true');
-        new RoyalAnimation();
-    }
-}
-
-// ===== MODIFIED ROYAL ANIMATION CLASS =====
 
 // ===== ROYAL PREMIUM ANIMATION WITH FLOATING ELEMENTS =====
 class RoyalAnimation {
@@ -1742,7 +1509,7 @@ selectPurity(productId, purity) {
             basePrice: product.price
         };
 
-        fetch("https://jewellery-website-5xi0.onrender.com/api/cart/add", {
+        fetch("https://jewellery-website-mongodburi.up.railway.app/api/cart/add", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ phone: userPhone, product: cartItem })
@@ -1814,7 +1581,7 @@ selectPurity(productId, purity) {
 
         if (localStorage.getItem('isLoggedIn') === 'true') {
             const userPhone = localStorage.getItem('userPhone');
-            fetch(`https://jewellery-website-5xi0.onrender.com/api/cart?phone=${encodeURIComponent(userPhone)}`)
+            fetch(`https://jewellery-website-mongodburi.up.railway.app/api/cart?phone=${encodeURIComponent(userPhone)}`)
                 .then(res => res.json())
                 .then(data => {
                     const totalItems = data.cart ? data.cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
@@ -1897,9 +1664,8 @@ selectPurity(productId, purity) {
 // ===== MAIN APP CODE =====
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOMContentLoaded - Main app code running");
-new FestivalAnimation();
   // ===== INITIALIZE ANIMATIONS =====
-//   new RoyalAnimation();
+  new RoyalAnimation();
 
   new JewelleryCollection();
   const floatingManager = new FloatingElementsManager();
@@ -1921,7 +1687,7 @@ new FestivalAnimation();
 
       try {
         const res = await fetch(
-          "https://jewellery-website-5xi0.onrender.com/api/register",
+          "https://jewellery-website-mongodburi.up.railway.app/api/register",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -2032,7 +1798,7 @@ new FestivalAnimation();
 
     try {
       const res = await fetch(
-        "https://jewellery-website-5xi0.onrender.com/api/cart/add",
+        "https://jewellery-website-mongodburi.up.railway.app/api/cart/add",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -2100,7 +1866,7 @@ new FestivalAnimation();
 
       const newQty = item.quantity + delta;
       const res = await fetch(
-        "https://jewellery-website-5xi0.onrender.com/api/cart/update",
+        "https://jewellery-website-mongodburi.up.railway.app/api/cart/update",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -2119,7 +1885,7 @@ new FestivalAnimation();
   // ===== INITIALIZE CART =====
   if (isLoggedIn) {
     fetch(
-      `https://jewellery-website-5xi0.onrender.com/api/cart?phone=${encodeURIComponent(
+      `https://jewellery-website-mongodburi.up.railway.app/api/cart?phone=${encodeURIComponent(
         userPhone
       )}`
     )
@@ -2211,6 +1977,7 @@ if (loginBtnNav) loginBtnNav.style.display = "none";
 
   console.log("👑 Royal Jewellery App Initialized Successfully");
 });
+
 
 
 
